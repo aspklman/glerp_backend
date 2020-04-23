@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: dev      #开发环境
+#    active: prod      #生产环境
+
+swagger:
+  production: false
+  basic:
+    enable: true
+    username: jeecg
+    password: jeecg1314

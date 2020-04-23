@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.scan.mapper.StgscanQualityMapper">
+
+    <select id="getBadNoQty" parameterType="java.lang.String" resultType="String">
+        WITH t_qty
+             AS (  SELECT fact_no, bad_no, SUM (qty) qty
+                     FROM stgscan_quality
+                    WHERE pro_fact = #{proFact}
+                    AND TRIM (style_no) = #{styleNo}
+                    AND sec_no = #{secNo}
+                    AND rec_date = #{recDate}
+                 GROUP BY fact_no, bad_no)
+          SELECT a.bad_level || '-' || TO_CHAR (NVL (b.qty, 0), 'fm990.0')
+            FROM bad_reason a, t_qty b
+           WHERE a.fact_no = b.fact_no(+) AND a.bad_cause = b.bad_no(+)
+        ORDER BY a.bad_level DESC, a.bad_no
+    </select>
+
+    <insert id="insertBadNoQty" parameterType="java.lang.String">
+        INSERT INTO stgscan_quality (FACT_NO,
+                                     PRO_FACT,
+                                     STYLE_NO,
+                                     SEC_NO,
+                                     STYLE_GENDER,
+                                     STYLE_COLOR,
+                                     BAD_LEVEL,
+                                     BAD_NO,
+                                     QTY,
+                                     REC_DATE,
+                                     REC_TIME,
+                                     USER_NO)
+                            VALUES ('0006',
+                                   #{proFact},
+                                   #{styleNo},
+                                   #{secNo},
+                                   NULL,
+                                   NULL,
+                                   #{badLevel},
+                                   #{badNo},
+                                   #{addValue},
+                                   #{recDate},
+                                   #{recTime},
+                                   #{userNo})
+    </insert>
+
+    <delete id="deleteBadNoQty" parameterType="java.lang.String">
+        DELETE FROM stgscan_quality
+              WHERE     fact_no = '0006'
+                    AND pro_fact = #{proFact}
+                    AND style_no = #{styleNo}
+                    AND sec_no = #{secNo}
+                    AND rec_date = #{recDate}
+                    AND bad_no = #{badNo}
+                    AND TRIM (user_no) = #{userNo}
+                    AND TRIM (rec_time) || ROWID =
+                           (SELECT MAX (TRIM (rec_time) || ROWID)
+                              FROM stgscan_quality
+                             WHERE     fact_no = '0006'
+                                AND pro_fact = #{proFact}
+                                AND style_no = #{styleNo}
+                                AND sec_no = #{secNo}
+                                AND rec_date = #{recDate}
+                                AND bad_no = #{badNo}
+                                AND TRIM (user_no) = #{userNo})
+    </delete>
+
+</mapper>

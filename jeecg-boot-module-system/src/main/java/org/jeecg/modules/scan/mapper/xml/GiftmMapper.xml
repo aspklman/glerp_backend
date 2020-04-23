@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.scan.mapper.GiftmMapper">
+
+	<!-- 编号(gift_no)：获取礼品鞋主表之最大编号+1，作为新增记录之编号 -->
+	<select id="selectGiftNo" resultType="java.lang.String">
+		SELECT    TO_CHAR (SYSDATE, 'yyyymm')
+		       || TRIM (
+		             NVL (TO_CHAR (MAX (SUBSTR (gift_no, 7)) + 1, '0000'), '0001'))
+		  FROM giftm
+		 WHERE SUBSTR (gift_no, 1, 6) = TO_CHAR (SYSDATE, 'yyyymm')
+	</select>
+	
+</mapper>
