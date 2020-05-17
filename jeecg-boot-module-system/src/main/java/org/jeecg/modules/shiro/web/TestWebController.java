@@ -36,6 +36,7 @@ public class TestWebController {
     public ResponseBean login(@RequestParam("username") String username,
                               @RequestParam("password") String password) {
     	SysUser user = userService.getUserByName(username);
+//    	SysUser user = userService.getUserByName(factNo, username);
     	if(user==null) {
     		return new ResponseBean(200, "用户不存在！", JwtUtil.sign(username, user.getPassword()));
     	}

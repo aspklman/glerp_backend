@@ -66,21 +66,15 @@ public class LoginController {
 	@ApiOperation("登录接口")
 	public Result<JSONObject> login(@RequestBody SysLoginModel sysLoginModel) throws Exception {
 		Result<JSONObject> result = new Result<JSONObject>();
-//		String factno1 = sysLoginModel.getFactNo();
+//		String factNo = sysLoginModel.getFactNo().toString();
+//		log.info("登录厂别：" + factNo);
 		String username = sysLoginModel.getUsername();
 		String password = sysLoginModel.getPassword();
 		//步骤1：TODO 前端密码加密，后端进行密码解密，防止传输密码篡改等问题，不配就直接提示密码错误，并记录日志后期进行统计分析是否锁定
 		password = AesEncryptUtil.desEncrypt(sysLoginModel.getPassword()).trim();//密码解密
 		//1. 校验用户是否有效
-//		SysUser sysUser = sysUserService.getUserByName(factno1, username);
+//		SysUser sysUser = sysUserService.getUserByName(factNo, username);
 		SysUser sysUser = sysUserService.getUserByName(username);
-//		String factno2 = sysUser.getFactNo();
-//		log.info("登录工厂1：" + sysUser.getFactNo());
-//		log.info("登录工厂2：" + sysLoginModel.getFactNo());
-//		log.info("用户名1：" + sysUser.getUsername());
-//		log.info("用户名2：" + sysLoginModel.getUsername());
-//		log.info("密码1：" + sysUser.getPassword());
-//		log.info("密码2：" + sysLoginModel.getPassword());
 		result = sysUserService.checkUserIsEffective(sysUser);
 		if(!result.isSuccess()) {
 			return result;

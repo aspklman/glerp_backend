@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.order.mapper.OrderAnalyzeMapper">
+
+    <!-- 当日 -->
+    <select id="getCustRevByToday" parameterType="String" resultType="HashMap">
+		SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo} AND rev_odr_date = #{revOdrToday}
+        GROUP BY custom_fnm
+        ORDER BY SUM (odr_qty) DESC
+	</select>
+
+    <!-- 本周 -->
+    <select id="getCustRevByWeek" parameterType="String" resultType="HashMap">
+		SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE     fact_no = #{factNo}
+         AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
+                      'yyyymmdd') =
+                TO_CHAR (TRUNC (TO_DATE (#{revOdrWeek}, 'yyyymmdd'), 'iw'),
+                         'yyyymmdd')
+        GROUP BY custom_fnm
+        ORDER BY SUM (odr_qty) DESC
+	</select>
+
+    <!-- 本月 -->
+    <select id="getCustRevByMonth" parameterType="String" resultType="HashMap">
+        SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo} AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrMonth}
+        GROUP BY custom_fnm
+        ORDER BY SUM (odr_qty) DESC
+    </select>
+
+    <!-- 本年 -->
+    <select id="getCustRevByYear" parameterType="String" resultType="HashMap">
+        SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo}
+          AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrYear}
+        GROUP BY custom_fnm
+        ORDER BY SUM (odr_qty) DESC
+    </select>
+
+    <!-- 用户所选日期期间 -->
+    <select id="getCustRevByPeriod" parameterType="String" resultType="HashMap">
+        SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo}
+          AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
+        GROUP BY custom_fnm
+        ORDER BY SUM (odr_qty) DESC
+    </select>
+
+</mapper>

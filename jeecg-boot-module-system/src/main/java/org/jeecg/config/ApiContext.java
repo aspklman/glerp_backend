@@ -9,11 +9,11 @@ import java.util.Map;
 @Slf4j
 @Component
 public class ApiContext {
-    private static final String KEY_CURRENT_PROVIDER_ID = "KEY_CURRENT_PROVIDER_ID";
+    private static final String KEY_CURRENT_PROVIDER_ID = "fact_no";
     private static final Map<String, Object> mContext = Maps.newConcurrentMap();
 
-    public void setCurrentProviderId(Long providerId) {
-        mContext.put(KEY_CURRENT_PROVIDER_ID, providerId);
+    public void setCurrentProviderId(Long factNo) {
+        mContext.put(KEY_CURRENT_PROVIDER_ID, factNo);
     }
 
     public Long getCurrentProviderId() {

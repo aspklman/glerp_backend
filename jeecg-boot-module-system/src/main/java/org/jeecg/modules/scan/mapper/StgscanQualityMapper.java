@@ -17,8 +17,8 @@ public interface StgscanQualityMapper extends BaseMapper<StgscanQuality> {
 
     public List<String> getBadNoQty(String proFact, String styleNo, String secNo, String recDate);
 
-    public void insertBadNoQty(String proFact, String styleNo, String secNo, String recDate, String badLevel, String badNo, String addValue, String recTime, String userNo);
+    public void insertBadNoQty(String factNo, String proFact, String styleNo, String secNo, String recDate, String badLevel, String badNo, String addValue, String recTime, String userNo);
 
-    public void deleteBadNoQty(String proFact, String styleNo, String secNo, String recDate, String badNo, String userNo);
+    public void deleteBadNoQty(String factNo, String proFact, String styleNo, String secNo, String recDate, String badNo, String userNo);
 
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.stock.mapper.MoveAreasMapper">
+
+    <update id="moveAreas" parameterType="HashMap" statementType="CALLABLE">
+        {CALL p_stk_move_areas(
+                #{factNo, jdbcType=CHAR, mode=IN},
+                #{stkNo, jdbcType=CHAR, mode=IN},
+                #{stockYymm, jdbcType=CHAR, mode=IN},
+                #{factOdrNo, jdbcType=CHAR, mode=IN},
+                #{locNo, jdbcType=CHAR, mode=IN},
+                #{cpartNo, jdbcType=CHAR, mode=IN},
+                #{locAreaOut, jdbcType=VARCHAR, mode=IN},
+                #{locAreaIn, jdbcType=VARCHAR, mode=IN},
+                #{createUpdateBy, jdbcType=VARCHAR, mode=IN}
+              )
+        }
+    </update>
+
+    <select id="queryOtherAreas" parameterType="String" resultType="org.jeecg.modules.stock.entity.MoveAreas">
+        SELECT *
+        FROM s_stockm
+        WHERE     fact_no = #{factNo}
+        AND stk_no = #{stkNo}
+        AND stock_yymm = #{stockYymm}
+        AND fact_odr_no = #{factOdrNo}
+        AND loc_no = #{locNo}
+        AND cpart_no = #{cpartNo}
+        AND loc_area != #{locArea}
+    </select>
+
+</mapper>

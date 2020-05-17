@@ -108,6 +108,8 @@ public class ShiroRealm extends AuthorizingRealm {
 
 		// 查询用户信息
 		LoginUser loginUser = new LoginUser();
+//		String factNo = loginUser.getFactNo();
+//		SysUser sysUser = sysUserService.getUserByName(factNo, username);
 		SysUser sysUser = sysUserService.getUserByName(username);
 		if (sysUser == null) {
 			throw new AuthenticationException("用户不存在!");

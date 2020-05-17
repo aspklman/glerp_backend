@@ -85,9 +85,9 @@ public class FormQltyMgmt {
 	@Excel(name = "英文原因说明", width = 256)
     @ApiModelProperty(value = "英文原因说明")
 	private java.lang.String badCauseEn;
-//	/**厂别*/
-//	@Dict(dicCode="pro_dept")
-//	@Excel(name = "厂别", width = 15)
-//	@ApiModelProperty(value = "厂别")
-//	private java.lang.String proFact;
+	/**厂别*/
+	@Dict(dicCode="pro_dept")
+	@Excel(name = "厂别", width = 15)
+	@ApiModelProperty(value = "厂别")
+	private java.lang.String proFact;
 }

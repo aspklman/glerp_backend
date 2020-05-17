@@ -74,13 +74,10 @@ public class QueryGenerator {
 	 */
 	public static <T> QueryWrapper<T> initQueryWrapper(T searchObj,Map<String, String[]> parameterMap){
 		long start = System.currentTimeMillis();
-//		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();	//获取用户选择的工厂编号
+		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+		String factNo = sysUser.getFactNo();
 		QueryWrapper<T> queryWrapper = new QueryWrapper<T>();
-//		queryWrapper.and(wrapper -> wrapper.eq("fact_no", sysUser.getFactNo()));		//查询条件中增加工厂编号
-		queryWrapper.and(wrapper -> wrapper.eq("fact_no", "0006"));		//查询条件中增加工厂编号
-//		queryWrapper.and(wrapper -> wrapper.eq("pro_dept", "U"));		//查询条件中增加分厂
-//		log.info("工厂编号：" + sysUser.getFactNo());
-//		log.info("表名：" + searchObj);
+		queryWrapper.and(wrapper -> wrapper.eq("fact_no", factNo));
 		installMplus(queryWrapper, searchObj, parameterMap);
 		log.info("查询条件：" + queryWrapper);
 		log.info("查询对象：" + searchObj);

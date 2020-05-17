@@ -105,7 +105,9 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 			return null;
 		}
 		LoginUser loginUser = new LoginUser();
+//		String factNo = loginUser.getFactNo();
 		SysUser sysUser = userMapper.getUserByName(username);
+//		SysUser sysUser = userMapper.getUserByName(factNo, username);
 		if(sysUser==null) {
 			return null;
 		}
@@ -158,7 +160,10 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 		String anntId = announcement.getId();
 		for(int i=0;i<userIds.length;i++) {
 			if(oConvertUtils.isNotEmpty(userIds[i])) {
+				LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();	//获取用户选择的工厂编号
+//				String factNo = loginUser.getFactNo();
 				SysUser sysUser = userMapper.getUserByName(userIds[i]);
+//				SysUser sysUser = userMapper.getUserByName(factNo, userIds[i]);
 				if(sysUser==null) {
 					continue;
 				}

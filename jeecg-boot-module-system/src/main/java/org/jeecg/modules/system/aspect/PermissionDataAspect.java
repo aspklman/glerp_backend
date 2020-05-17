@@ -67,11 +67,11 @@ public class PermissionDataAspect {
 		SysPermission currentSyspermission=null;
 		if(oConvertUtils.isNotEmpty(component)) {
 			//1.通过注解属性pageComponent 获取菜单
-//			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();	//获取用户选择的工厂编号
+//			LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();	//获取用户选择的工厂编号
 			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<SysPermission>();
-//			query.eq(SysPermission::getFactNo, sysUser.getFactNo());					//查询条件中增加工厂编号
-			query.eq(SysPermission::getFactNo, "0006");					//查询条件中增加工厂编号
-//			log.info("查询菜单1:" + sysUser.getFactNo());
+//			query.eq(SysPermission::getFactNo, loginUser.getFactNo());					//查询条件中增加工厂编号
+//			query.eq(SysPermission::getFactNo, "0006");					//查询条件中增加工厂编号
+//			log.info("查询菜单1:" + loginUser.getFactNo());
 			log.info("查询菜单1:" + query);
 			query.eq(SysPermission::getDelFlag,0);
 			query.eq(SysPermission::getComponent, component);
@@ -82,11 +82,11 @@ public class PermissionDataAspect {
 			requestPath = filterUrl(requestPath);
 			log.info("拦截请求>>"+requestPath+";请求类型>>"+requestMethod);
 			//1.直接通过前端请求地址查询菜单
-//			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();	//获取用户选择的工厂编号
+//			LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();	//获取用户选择的工厂编号
 			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<SysPermission>();
-//			query.eq(SysPermission::getFactNo, sysUser.getFactNo());					//查询条件中增加工厂编号
-			query.eq(SysPermission::getFactNo, "0006");					//查询条件中增加工厂编号
-//			log.info("查询菜单2:" + sysUser.getFactNo());
+//			query.eq(SysPermission::getFactNo, loginUser.getFactNo());					//查询条件中增加工厂编号
+//			query.eq(SysPermission::getFactNo, "0006");					//查询条件中增加工厂编号
+//			log.info("查询菜单2:" + loginUser.getFactNo());
 			log.info("查询菜单2:" + query);
 			query.eq(SysPermission::getMenuType,2);
 			query.eq(SysPermission::getDelFlag,0);

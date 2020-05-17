@@ -1,5 +1,6 @@
 package org.jeecg.modules.scan.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.jeecg.modules.scan.entity.StgscanQuality;
 import org.jeecg.modules.scan.mapper.StgscanQualityMapper;
 import org.jeecg.modules.scan.service.IStgscanQualityService;
@@ -29,13 +30,31 @@ public class StgscanQualityServiceImpl extends ServiceImpl<StgscanQualityMapper,
     }
 
     @Override
-    public void insertBadNoQty(String proFact, String styleNo, String secNo, String recDate, String badLevel, String badNo, String addValue, String recTime, String userNo) {
-        stgscanQualityMapper.insertBadNoQty(proFact, styleNo, secNo, recDate, badLevel, badNo, addValue, recTime, userNo);
+    @DS("slave_1")
+    public List<String> getBadNoQtyVn(String proFact, String styleNo, String secNo, String recDate) {
+        return stgscanQualityMapper.getBadNoQty(proFact, styleNo, secNo, recDate);
     }
 
     @Override
-    public void deleteBadNoQty(String proFact, String styleNo, String secNo, String recDate, String badNo, String userNo) {
-        stgscanQualityMapper.deleteBadNoQty(proFact, styleNo, secNo, recDate, badNo, userNo);
+    public void insertBadNoQty(String factNo, String proFact, String styleNo, String secNo, String recDate, String badLevel, String badNo, String addValue, String recTime, String userNo) {
+        stgscanQualityMapper.insertBadNoQty(factNo, proFact, styleNo, secNo, recDate, badLevel, badNo, addValue, recTime, userNo);
+    }
+
+    @Override
+    @DS("slave_1")
+    public void insertBadNoQtyVn(String factNo, String proFact, String styleNo, String secNo, String recDate, String badLevel, String badNo, String addValue, String recTime, String userNo) {
+        stgscanQualityMapper.insertBadNoQty(factNo, proFact, styleNo, secNo, recDate, badLevel, badNo, addValue, recTime, userNo);
+    }
+
+    @Override
+    public void deleteBadNoQty(String factNo, String proFact, String styleNo, String secNo, String recDate, String badNo, String userNo) {
+        stgscanQualityMapper.deleteBadNoQty(factNo, proFact, styleNo, secNo, recDate, badNo, userNo);
+    }
+
+    @Override
+    @DS("slave_1")
+    public void deleteBadNoQtyVn(String factNo, String proFact, String styleNo, String secNo, String recDate, String badNo, String userNo) {
+        stgscanQualityMapper.deleteBadNoQty(factNo, proFact, styleNo, secNo, recDate, badNo, userNo);
     }
 
 }

@@ -71,10 +71,10 @@ public class SysPermissionController {
 	public Result<List<SysPermissionTree>> list() {
 		Result<List<SysPermissionTree>> result = new Result<>();
 		try {
-//			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();	//获取用户选择的工厂编号
+			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();	//获取用户选择的工厂编号
 			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<SysPermission>();
-//			query.eq(SysPermission::getFactNo, sysUser.getFactNo());					//查询条件中增加工厂编号
-//			log.info("加载数据节点:" + sysUser.getFactNo());
+			query.eq(SysPermission::getFactNo, sysUser.getFactNo());					//查询条件中增加工厂编号
+			log.info("加载数据节点:" + sysUser.getFactNo());
 			query.eq(SysPermission::getDelFlag, CommonConstant.DEL_FLAG_0);
 			query.orderByAsc(SysPermission::getSortNo);
 			List<SysPermission> list = sysPermissionService.list(query);
@@ -169,6 +169,7 @@ public class SysPermissionController {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			result.error500("操作失败");
+
 		}
 		return result;
 	}

@@ -1,6 +1,7 @@
 package org.jeecg.modules.order.service.impl;
 
 import org.jeecg.modules.order.entity.Inboxspec;
+import org.jeecg.modules.order.entity.OrderAnalyze;
 import org.jeecg.modules.order.mapper.InboxspecMapper;
 import org.jeecg.modules.order.service.IInboxspecService;
 import org.springframework.stereotype.Service;

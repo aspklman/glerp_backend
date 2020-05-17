@@ -16,8 +16,14 @@ public interface IStgscanQualityService extends IService<StgscanQuality> {
 
     public List<String> getBadNoQty(String proFact, String styleNo, String secNo, String recDate);
 
-    public void insertBadNoQty(String proFact, String styleNo, String secNo, String recDate, String badLevel, String badNo, String addValue, String recTime, String userNo);
+    public List<String> getBadNoQtyVn(String proFact, String styleNo, String secNo, String recDate);
 
-    public void deleteBadNoQty(String proFact, String styleNo, String secNo, String recDate, String badNo, String userNo);
+    public void insertBadNoQty(String factNo, String proFact, String styleNo, String secNo, String recDate, String badLevel, String badNo, String addValue, String recTime, String userNo);
+
+    public void insertBadNoQtyVn(String factNo, String proFact, String styleNo, String secNo, String recDate, String badLevel, String badNo, String addValue, String recTime, String userNo);
+
+    public void deleteBadNoQty(String factNo, String proFact, String styleNo, String secNo, String recDate, String badNo, String userNo);
+
+    public void deleteBadNoQtyVn(String factNo, String proFact, String styleNo, String secNo, String recDate, String badNo, String userNo);
 
 }

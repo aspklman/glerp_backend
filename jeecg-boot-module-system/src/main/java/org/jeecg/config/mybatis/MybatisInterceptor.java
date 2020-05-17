@@ -16,7 +16,9 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.config.ApiContext;
 import org.jeecg.modules.system.entity.SysUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Intercepts({ @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
 public class MybatisInterceptor implements Interceptor  {
-	
+
+	@Autowired
+	private ApiContext apiContext;
+
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
 		MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
@@ -49,28 +54,24 @@ public class MybatisInterceptor implements Interceptor  {
 			for (Field field : fields) {
 				log.debug("------field.name------" + field.getName());
 				try {
+
+
 					// 获取登录用户信息
 					LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-//					log.info("插入记录工厂编号：" + sysUser.getFactNo());
-//					log.info("插入记录姓名：" + sysUser.getRealname());
-					log.debug("用户名：" + field.getName());
-					// 注入工厂信息
+
+//                    apiContext.setCurrentProviderId(sysUser.getFactNo());
+//                    log.info("从上下文获取当前租户ID：" + apiContext.getCurrentProviderId());
+
+//					// 注入工厂信息
 					if ("factNo".equals(field.getName())) {
 						field.setAccessible(true);
 						Object local_factNo = field.get(parameter);
-//						log.info("插入记录工厂编号：" + local_factNo);
 						field.setAccessible(false);
 						if (local_factNo == null || local_factNo.equals("")) {
-							String factNo = "0006";		//注入工厂编号
-//							if (sysUser != null) {
-//								// 登录账号
-//								factNo = sysUser.getFactNo();
-//							}
+							String factNo = sysUser.getFactNo();
 							if (oConvertUtils.isNotEmpty(factNo)) {
 								field.setAccessible(true);
-//								log.info("插入工厂编号之前");
 								field.set(parameter, factNo);
-//								log.info("插入工厂编号之后");
 								field.setAccessible(false);
 							}
 						}

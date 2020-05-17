@@ -30,7 +30,7 @@
                                      REC_DATE,
                                      REC_TIME,
                                      USER_NO)
-                            VALUES ('0006',
+                            VALUES (#{factNo},
                                    #{proFact},
                                    #{styleNo},
                                    #{secNo},
@@ -46,7 +46,7 @@
 
     <delete id="deleteBadNoQty" parameterType="java.lang.String">
         DELETE FROM stgscan_quality
-              WHERE     fact_no = '0006'
+              WHERE     fact_no = #{factNo}
                     AND pro_fact = #{proFact}
                     AND style_no = #{styleNo}
                     AND sec_no = #{secNo}
@@ -56,7 +56,7 @@
                     AND TRIM (rec_time) || ROWID =
                            (SELECT MAX (TRIM (rec_time) || ROWID)
                               FROM stgscan_quality
-                             WHERE     fact_no = '0006'
+                             WHERE     fact_no = #{factNo}
                                 AND pro_fact = #{proFact}
                                 AND style_no = #{styleNo}
                                 AND sec_no = #{secNo}

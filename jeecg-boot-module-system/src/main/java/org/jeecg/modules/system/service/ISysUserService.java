@@ -22,8 +22,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysUserService extends IService<SysUser> {
 	
+//	public SysUser getUserByName(String factNo, String username);
 	public SysUser getUserByName(String username);
-	
+
 	/**
 	 * 添加用户和用户角色关系
 	 * @param user

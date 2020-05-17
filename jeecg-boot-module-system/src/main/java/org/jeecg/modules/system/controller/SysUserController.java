@@ -726,10 +726,12 @@ public class SysUserController {
 		String phone = jsonObject.getString("phone");
 		String smscode = jsonObject.getString("smscode");
 		Object code = redisUtil.get(phone);
+//		String factNo = jsonObject.getString("factNo");
 		String username = jsonObject.getString("username");
 		String password = jsonObject.getString("password");
 		String email = jsonObject.getString("email");
 		SysUser sysUser1 = sysUserService.getUserByName(username);
+//		SysUser sysUser1 = sysUserService.getUserByName(factNo, username);
 		if (sysUser1 != null) {
 			result.setMessage("用户名已注册");
 			result.setSuccess(false);
@@ -783,12 +785,14 @@ public class SysUserController {
 	@GetMapping("/querySysUser")
 	public Result<Map<String, Object>> querySysUser(SysUser sysUser) {
 		String phone = sysUser.getPhone();
+//		String factNo = sysUser.getFactNo();
 		String username = sysUser.getUsername();
 		Result<Map<String, Object>> result = new Result<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (oConvertUtils.isNotEmpty(phone)) {
 			SysUser user = sysUserService.getUserByPhone(phone);
 			if(user!=null) {
+//				map.put("factNo",user.getFactNo());
 				map.put("username",user.getUsername());
 				map.put("phone",user.getPhone());
 				result.setSuccess(true);
@@ -798,8 +802,10 @@ public class SysUserController {
 		}
 		if (oConvertUtils.isNotEmpty(username)) {
 			SysUser user = sysUserService.getUserByName(username);
+//			SysUser user = sysUserService.getUserByName(factNo, username);
 			if(user!=null) {
-				map.put("username",user.getUsername());
+//                map.put("factNo",user.getFactNo());
+                map.put("username",user.getUsername());
 				map.put("phone",user.getPhone());
 				result.setSuccess(true);
 				result.setResult(map);
@@ -876,18 +882,22 @@ public class SysUserController {
 	@GetMapping("/getUserSectionInfoByToken")
 	public Result<?> getUserSectionInfoByToken(HttpServletRequest request, @RequestParam(name = "token", required = false) String token) {
 		try {
+//		    String factNo = null;
 			String username = null;
 			// 如果没有传递token，就从header中获取token并获取用户信息
 			if (oConvertUtils.isEmpty(token)) {
+//			    factNo = JwtUtil.getUserNameByToken(request);
 				 username = JwtUtil.getUserNameByToken(request);
 			} else {
-				 username = JwtUtil.getUsername(token);				
+				 username = JwtUtil.getUsername(token);
 			}
 
 			log.info(" ------ 通过令牌获取部分用户信息，当前用户： " + username);
 
 			// 根据用户名查询用户信息
-			SysUser sysUser = sysUserService.getUserByName(username);
+//            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();	//获取用户选择的工厂编号
+//            String factNo = loginUser.getFactNo();
+            SysUser sysUser = sysUserService.getUserByName(username);
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("sysUserId", sysUser.getId());
 			map.put("sysUserCode", sysUser.getUsername()); // 当前登录用户登录账号
