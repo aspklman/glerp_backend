@@ -4,16 +4,31 @@
 
     <!-- 当日 -->
     <select id="getCustRevByToday" parameterType="String" resultType="HashMap">
-		SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+		SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
         FROM v_order_order_analyze
         WHERE fact_no = #{factNo} AND rev_odr_date = #{revOdrToday}
         GROUP BY custom_fnm
         ORDER BY SUM (odr_qty) DESC
 	</select>
+    <select id="getBrandRevByToday" parameterType="String" resultType="HashMap">
+		SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo} AND rev_odr_date = #{revOdrToday}
+        GROUP BY brand_nm
+        ORDER BY SUM (odr_qty) DESC
+	</select>
+    <select id="getStyleRevByToday" parameterType="String" resultType="HashMap">
+		SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo} AND rev_odr_date = #{revOdrToday}
+        GROUP BY artic_no
+        ORDER BY SUM (odr_qty) DESC
+	</select>
+
 
     <!-- 本周 -->
     <select id="getCustRevByWeek" parameterType="String" resultType="HashMap">
-		SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+		SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
         FROM v_order_order_analyze
         WHERE     fact_no = #{factNo}
          AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
@@ -23,33 +38,101 @@
         GROUP BY custom_fnm
         ORDER BY SUM (odr_qty) DESC
 	</select>
+    <select id="getBrandRevByWeek" parameterType="String" resultType="HashMap">
+		SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE     fact_no = #{factNo}
+         AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
+                      'yyyymmdd') =
+                TO_CHAR (TRUNC (TO_DATE (#{revOdrWeek}, 'yyyymmdd'), 'iw'),
+                         'yyyymmdd')
+        GROUP BY brand_nm
+        ORDER BY SUM (odr_qty) DESC
+	</select>
+    <select id="getStyleRevByWeek" parameterType="String" resultType="HashMap">
+		SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE     fact_no = #{factNo}
+         AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
+                      'yyyymmdd') =
+                TO_CHAR (TRUNC (TO_DATE (#{revOdrWeek}, 'yyyymmdd'), 'iw'),
+                         'yyyymmdd')
+        GROUP BY artic_no
+        ORDER BY SUM (odr_qty) DESC
+	</select>
 
     <!-- 本月 -->
     <select id="getCustRevByMonth" parameterType="String" resultType="HashMap">
-        SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+        SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
         FROM v_order_order_analyze
         WHERE fact_no = #{factNo} AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrMonth}
         GROUP BY custom_fnm
         ORDER BY SUM (odr_qty) DESC
     </select>
+    <select id="getBrandRevByMonth" parameterType="String" resultType="HashMap">
+        SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo} AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrMonth}
+        GROUP BY brand_nm
+        ORDER BY SUM (odr_qty) DESC
+    </select>
+    <select id="getStyleRevByMonth" parameterType="String" resultType="HashMap">
+        SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo} AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrMonth}
+        GROUP BY artic_no
+        ORDER BY SUM (odr_qty) DESC
+    </select>
 
     <!-- 本年 -->
     <select id="getCustRevByYear" parameterType="String" resultType="HashMap">
-        SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+        SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
         FROM v_order_order_analyze
         WHERE fact_no = #{factNo}
           AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrYear}
         GROUP BY custom_fnm
         ORDER BY SUM (odr_qty) DESC
     </select>
+    <select id="getBrandRevByYear" parameterType="String" resultType="HashMap">
+        SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo}
+          AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrYear}
+        GROUP BY brand_nm
+        ORDER BY SUM (odr_qty) DESC
+    </select>
+    <select id="getStyleRevByYear" parameterType="String" resultType="HashMap">
+        SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo}
+          AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrYear}
+        GROUP BY artic_no
+        ORDER BY SUM (odr_qty) DESC
+    </select>
 
     <!-- 用户所选日期期间 -->
     <select id="getCustRevByPeriod" parameterType="String" resultType="HashMap">
-        SELECT custom_fnm, SUM (odr_qty) "odr_qty"
+        SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
         FROM v_order_order_analyze
         WHERE fact_no = #{factNo}
           AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
         GROUP BY custom_fnm
+        ORDER BY SUM (odr_qty) DESC
+    </select>
+    <select id="getBrandRevByPeriod" parameterType="String" resultType="HashMap">
+        SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo}
+          AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
+        GROUP BY brand_nm
+        ORDER BY SUM (odr_qty) DESC
+    </select>
+    <select id="getStyleRevByPeriod" parameterType="String" resultType="HashMap">
+        SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
+        FROM v_order_order_analyze
+        WHERE fact_no = #{factNo}
+          AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
+        GROUP BY artic_no
         ORDER BY SUM (odr_qty) DESC
     </select>
 

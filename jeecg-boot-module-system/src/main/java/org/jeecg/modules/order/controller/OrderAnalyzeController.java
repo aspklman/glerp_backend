@@ -81,6 +81,62 @@ public class OrderAnalyzeController {
     }
 
     /**
+     * 今日品牌接单数量
+     *
+     * @param
+     * @return
+     */
+    @AutoLog(value = "订单分析-今日品牌接单数量")
+    @ApiOperation(value = "订单分析-今日品牌接单数量", notes = "订单分析-今日品牌接单数量")
+    @GetMapping(value = "/getBrandRevByToday")
+    public Result<List<Map<String, Object>>> getBrandRevByToday() {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        try {
+            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            String factNo = loginUser.getFactNo();
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            String revOdrToday = dateFormat.format(currentDate);
+            log.info("当天日期" + revOdrToday);
+            List<Map<String, Object>> orderAnalyze = this.orderAnalyzeService.getBrandRevByToday(factNo, revOdrToday);
+            log.info("今日订单数:" + orderAnalyze);
+            result.setResult(orderAnalyze);
+            result.success("查询成功！");
+        } catch (Exception e) {
+            result.error500("查询失败！ " + e);
+        }
+        return result;
+    }
+
+    /**
+     * 今日型体接单数量
+     *
+     * @param
+     * @return
+     */
+    @AutoLog(value = "订单分析-今日型体接单数量")
+    @ApiOperation(value = "订单分析-今日型体接单数量", notes = "订单分析-今日型体接单数量")
+    @GetMapping(value = "/getStyleRevByToday")
+    public Result<List<Map<String, Object>>> getStyleRevByToday() {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        try {
+            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            String factNo = loginUser.getFactNo();
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            String revOdrToday = dateFormat.format(currentDate);
+            log.info("当天日期" + revOdrToday);
+            List<Map<String, Object>> orderAnalyze = this.orderAnalyzeService.getStyleRevByToday(factNo, revOdrToday);
+            log.info("今日订单数:" + orderAnalyze);
+            result.setResult(orderAnalyze);
+            result.success("查询成功！");
+        } catch (Exception e) {
+            result.error500("查询失败！ " + e);
+        }
+        return result;
+    }
+
+    /**
      * 本周客户接单数量
      *
      * @param
@@ -109,6 +165,62 @@ public class OrderAnalyzeController {
     }
 
     /**
+     * 本周品牌接单数量
+     *
+     * @param
+     * @return
+     */
+    @AutoLog(value = "订单分析-本周品牌接单数量")
+    @ApiOperation(value = "订单分析-本周品牌接单数量", notes = "订单分析-本周品牌接单数量")
+    @GetMapping(value = "/getBrandRevByWeek")
+    public Result<List<Map<String, Object>>> getBrandRevByWeek() {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        try {
+            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            String factNo = loginUser.getFactNo();
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            String revOdrWeek = dateFormat.format(currentDate);
+            log.info("本周当天日期" + revOdrWeek);
+            List<Map<String, Object>> orderAnalyze = this.orderAnalyzeService.getBrandRevByWeek(factNo, revOdrWeek);
+            log.info("本周订单数:" + orderAnalyze);
+            result.setResult(orderAnalyze);
+            result.success("查询成功！");
+        } catch (Exception e) {
+            result.error500("查询失败！ " + e);
+        }
+        return result;
+    }
+
+    /**
+     * 本周型体接单数量
+     *
+     * @param
+     * @return
+     */
+    @AutoLog(value = "订单分析-本周型体接单数量")
+    @ApiOperation(value = "订单分析-本周型体接单数量", notes = "订单分析-本周型体接单数量")
+    @GetMapping(value = "/getStyleRevByWeek")
+    public Result<List<Map<String, Object>>> getStyleRevByWeek() {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        try {
+            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            String factNo = loginUser.getFactNo();
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            String revOdrWeek = dateFormat.format(currentDate);
+            log.info("本周当天日期" + revOdrWeek);
+            List<Map<String, Object>> orderAnalyze = this.orderAnalyzeService.getStyleRevByWeek(factNo, revOdrWeek);
+            log.info("本周订单数:" + orderAnalyze);
+            result.setResult(orderAnalyze);
+            result.success("查询成功！");
+        } catch (Exception e) {
+            result.error500("查询失败！ " + e);
+        }
+        return result;
+    }
+
+    /**
      * 本月客户接单数量
      *
      * @param
@@ -119,18 +231,6 @@ public class OrderAnalyzeController {
     @GetMapping(value = "/getCustRevByMonth")
     public Result<List<Map<String, Object>>> getCustRevByMonth() {
         Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
-//         if (params == null) {
-//             result.error500("参数不识别！");
-//         } else {
-//			 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-//			 String factNo = loginUser.getFactNo();
-//             JSONObject jsonObject = JSONObject.parseObject(params);
-//             String revOdrMonth = jsonObject.getString("revOdrMonth");
-//			 String stockYymm = jsonObject.getString("stockYymm");
-//			 String factOdrNo = jsonObject.getString("factOdrNo");
-//			 String locNo = jsonObject.getString("locNo");
-//			 String cpartNo = jsonObject.getString("cpartNo");
-//			 String locArea = jsonObject.getString("locArea");
         try {
             LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
             String factNo = loginUser.getFactNo();
@@ -144,7 +244,60 @@ public class OrderAnalyzeController {
         } catch (Exception e) {
             result.error500("查询失败！ " + e);
         }
-//         }
+        return result;
+    }
+
+    /**
+     * 本月品牌接单数量
+     *
+     * @param
+     * @return
+     */
+    @AutoLog(value = "订单分析-本月品牌接单数量")
+    @ApiOperation(value = "订单分析-本月品牌接单数量", notes = "订单分析-本月品牌接单数量")
+    @GetMapping(value = "/getBrandRevByMonth")
+    public Result<List<Map<String, Object>>> getBrandRevByMonth() {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        try {
+            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            String factNo = loginUser.getFactNo();
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+            String revOdrMonth = dateFormat.format(currentDate);
+            List<Map<String, Object>> OdrQtyMap = this.orderAnalyzeService.getBrandRevByMonth(factNo, revOdrMonth);
+            log.info("本月订单数:" + OdrQtyMap);
+            result.setResult(OdrQtyMap);
+            result.success("查询成功！");
+        } catch (Exception e) {
+            result.error500("查询失败！ " + e);
+        }
+        return result;
+    }
+
+    /**
+     * 本月型体接单数量
+     *
+     * @param
+     * @return
+     */
+    @AutoLog(value = "订单分析-本月型体接单数量")
+    @ApiOperation(value = "订单分析-本月型体接单数量", notes = "订单分析-本月型体接单数量")
+    @GetMapping(value = "/getStyleRevByMonth")
+    public Result<List<Map<String, Object>>> getStyleRevByMonth() {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        try {
+            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            String factNo = loginUser.getFactNo();
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+            String revOdrMonth = dateFormat.format(currentDate);
+            List<Map<String, Object>> OdrQtyMap = this.orderAnalyzeService.getStyleRevByMonth(factNo, revOdrMonth);
+            log.info("本月订单数:" + OdrQtyMap);
+            result.setResult(OdrQtyMap);
+            result.success("查询成功！");
+        } catch (Exception e) {
+            result.error500("查询失败！ " + e);
+        }
         return result;
     }
 
@@ -176,6 +329,60 @@ public class OrderAnalyzeController {
     }
 
     /**
+     * 本年品牌接单数量
+     *
+     * @param
+     * @return
+     */
+    @AutoLog(value = "订单分析-本年品牌接单数量")
+    @ApiOperation(value = "订单分析-本年品牌接单数量", notes = "订单分析-本年品牌接单数量")
+    @GetMapping(value = "/getBrandRevByYear")
+    public Result<List<Map<String, Object>>> getBrandRevByYear() {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        try {
+            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            String factNo = loginUser.getFactNo();
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+            String revOdrYear = dateFormat.format(currentDate);
+            List<Map<String, Object>> orderAnalyze = this.orderAnalyzeService.getBrandRevByYear(factNo, revOdrYear);
+            log.info("本年订单数:" + orderAnalyze);
+            result.setResult(orderAnalyze);
+            result.success("查询成功！");
+        } catch (Exception e) {
+            result.error500("查询失败！ " + e);
+        }
+        return result;
+    }
+
+    /**
+     * 本年型体接单数量
+     *
+     * @param
+     * @return
+     */
+    @AutoLog(value = "订单分析-本年型体接单数量")
+    @ApiOperation(value = "订单分析-本年型体接单数量", notes = "订单分析-本年型体接单数量")
+    @GetMapping(value = "/getStyleRevByYear")
+    public Result<List<Map<String, Object>>> getStyleRevByYear() {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        try {
+            LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            String factNo = loginUser.getFactNo();
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+            String revOdrYear = dateFormat.format(currentDate);
+            List<Map<String, Object>> orderAnalyze = this.orderAnalyzeService.getStyleRevByYear(factNo, revOdrYear);
+            log.info("本年订单数:" + orderAnalyze);
+            result.setResult(orderAnalyze);
+            result.success("查询成功！");
+        } catch (Exception e) {
+            result.error500("查询失败！ " + e);
+        }
+        return result;
+    }
+
+    /**
      * 用户所选日期期间客户接单数量
      *
      * @param period
@@ -183,8 +390,8 @@ public class OrderAnalyzeController {
      */
     @AutoLog(value = "订单分析-用户所选日期期间客户接单数量")
     @ApiOperation(value = "订单分析-用户所选日期期间客户接单数量", notes = "订单分析-用户所选日期期间客户接单数量")
-    @GetMapping(value = "/getCustRevPeriodOdrQty")
-    public Result<List<Map<String, Object>>> getCustRevPeriodOdrQty(@RequestParam("period") String period) {
+    @GetMapping(value = "/getCustRevByPeriod")
+    public Result<List<Map<String, Object>>> getCustRevByPeriod(@RequestParam("period") String period) {
         Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
         if (period == null) {
             result.error500("参数不识别！");
@@ -197,6 +404,70 @@ public class OrderAnalyzeController {
                 String dateEnd = periodArray[1];
                 log.info("用户所选日期期间订单数:" + dateStart + '/' + dateEnd);
                 List<Map<String, Object>> orderAnalyze = this.orderAnalyzeService.getCustRevByPeriod(factNo, dateStart, dateEnd);
+                log.info("用户所选日期期间订单数:" + orderAnalyze);
+                result.setResult(orderAnalyze);
+                result.success("查询成功！");
+            } catch (Exception e) {
+                result.error500("查询失败！ " + e);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 用户所选日期期间品牌接单数量
+     *
+     * @param period
+     * @return
+     */
+    @AutoLog(value = "订单分析-用户所选日期期间品牌接单数量")
+    @ApiOperation(value = "订单分析-用户所选日期期间品牌接单数量", notes = "订单分析-用户所选日期期间品牌接单数量")
+    @GetMapping(value = "/getBrandRevByPeriod")
+    public Result<List<Map<String, Object>>> getBrandRevByPeriod(@RequestParam("period") String period) {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        if (period == null) {
+            result.error500("参数不识别！");
+        } else {
+            try {
+                LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+                String factNo = loginUser.getFactNo();
+                String periodArray[] = period.split(",");
+                String dateStart = periodArray[0];
+                String dateEnd = periodArray[1];
+                log.info("用户所选日期期间订单数:" + dateStart + '/' + dateEnd);
+                List<Map<String, Object>> orderAnalyze = this.orderAnalyzeService.getBrandRevByPeriod(factNo, dateStart, dateEnd);
+                log.info("用户所选日期期间订单数:" + orderAnalyze);
+                result.setResult(orderAnalyze);
+                result.success("查询成功！");
+            } catch (Exception e) {
+                result.error500("查询失败！ " + e);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 用户所选日期期间型体接单数量
+     *
+     * @param period
+     * @return
+     */
+    @AutoLog(value = "订单分析-用户所选日期期间型体接单数量")
+    @ApiOperation(value = "订单分析-用户所选日期期间型体接单数量", notes = "订单分析-用户所选日期期间型体接单数量")
+    @GetMapping(value = "/getStyleRevByPeriod")
+    public Result<List<Map<String, Object>>> getStyleRevByPeriod(@RequestParam("period") String period) {
+        Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+        if (period == null) {
+            result.error500("参数不识别！");
+        } else {
+            try {
+                LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+                String factNo = loginUser.getFactNo();
+                String periodArray[] = period.split(",");
+                String dateStart = periodArray[0];
+                String dateEnd = periodArray[1];
+                log.info("用户所选日期期间订单数:" + dateStart + '/' + dateEnd);
+                List<Map<String, Object>> orderAnalyze = this.orderAnalyzeService.getStyleRevByPeriod(factNo, dateStart, dateEnd);
                 log.info("用户所选日期期间订单数:" + orderAnalyze);
                 result.setResult(orderAnalyze);
                 result.success("查询成功！");
