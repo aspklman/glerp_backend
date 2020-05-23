@@ -2,137 +2,115 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.order.mapper.OrderAnalyzeMapper">
 
-    <!-- 当日 -->
-    <select id="getCustRevByToday" parameterType="String" resultType="HashMap">
-		SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE fact_no = #{factNo} AND rev_odr_date = #{revOdrToday}
-        GROUP BY custom_fnm
-        ORDER BY SUM (odr_qty) DESC
-	</select>
-    <select id="getBrandRevByToday" parameterType="String" resultType="HashMap">
-		SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE fact_no = #{factNo} AND rev_odr_date = #{revOdrToday}
-        GROUP BY brand_nm
-        ORDER BY SUM (odr_qty) DESC
-	</select>
-    <select id="getStyleRevByToday" parameterType="String" resultType="HashMap">
-		SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE fact_no = #{factNo} AND rev_odr_date = #{revOdrToday}
-        GROUP BY artic_no
-        ORDER BY SUM (odr_qty) DESC
-	</select>
-
-
-    <!-- 本周 -->
-    <select id="getCustRevByWeek" parameterType="String" resultType="HashMap">
-		SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE     fact_no = #{factNo}
-         AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
-                      'yyyymmdd') =
-                TO_CHAR (TRUNC (TO_DATE (#{revOdrWeek}, 'yyyymmdd'), 'iw'),
-                         'yyyymmdd')
-        GROUP BY custom_fnm
-        ORDER BY SUM (odr_qty) DESC
-	</select>
-    <select id="getBrandRevByWeek" parameterType="String" resultType="HashMap">
-		SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE     fact_no = #{factNo}
-         AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
-                      'yyyymmdd') =
-                TO_CHAR (TRUNC (TO_DATE (#{revOdrWeek}, 'yyyymmdd'), 'iw'),
-                         'yyyymmdd')
-        GROUP BY brand_nm
-        ORDER BY SUM (odr_qty) DESC
-	</select>
-    <select id="getStyleRevByWeek" parameterType="String" resultType="HashMap">
-		SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE     fact_no = #{factNo}
-         AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
-                      'yyyymmdd') =
-                TO_CHAR (TRUNC (TO_DATE (#{revOdrWeek}, 'yyyymmdd'), 'iw'),
-                         'yyyymmdd')
-        GROUP BY artic_no
-        ORDER BY SUM (odr_qty) DESC
-	</select>
-
-    <!-- 本月 -->
-    <select id="getCustRevByMonth" parameterType="String" resultType="HashMap">
-        SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE fact_no = #{factNo} AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrMonth}
-        GROUP BY custom_fnm
-        ORDER BY SUM (odr_qty) DESC
-    </select>
-    <select id="getBrandRevByMonth" parameterType="String" resultType="HashMap">
-        SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE fact_no = #{factNo} AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrMonth}
-        GROUP BY brand_nm
-        ORDER BY SUM (odr_qty) DESC
-    </select>
-    <select id="getStyleRevByMonth" parameterType="String" resultType="HashMap">
-        SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE fact_no = #{factNo} AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrMonth}
-        GROUP BY artic_no
-        ORDER BY SUM (odr_qty) DESC
-    </select>
-
-    <!-- 本年 -->
-    <select id="getCustRevByYear" parameterType="String" resultType="HashMap">
+    <!-- 客户_接单日期_数量 -->
+    <select id="getCustRevOdrQty" parameterType="String" resultType="HashMap">
         SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
         FROM v_order_order_analyze
         WHERE fact_no = #{factNo}
-          AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrYear}
+        <if test=" revOdrDateByToday != null and revOdrDateByToday != '' ">
+            AND rev_odr_date = #{revOdrDateByToday}
+        </if>
+        <if test=" revOdrDateByWeek != null and revOdrDateByWeek != '' ">
+            AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
+                         'yyyymmdd') =
+                TO_CHAR (TRUNC (TO_DATE (#{revOdrDateByWeek}, 'yyyymmdd'), 'iw'),
+                         'yyyymmdd')
+        </if>
+        <if test=" revOdrDateByMonth != null and revOdrDateByMonth != '' ">
+            AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrDateByMonth}
+        </if>
+        <if test=" revOdrDateByYear != null and revOdrDateByYear != '' ">
+            AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrDateByYear}
+        </if>
+        <if test=" dateStart != null and dateStart != '' and dateEnd != null and dateEnd != '' ">
+            AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
+        </if>
         GROUP BY custom_fnm
         ORDER BY SUM (odr_qty) DESC
     </select>
-    <select id="getBrandRevByYear" parameterType="String" resultType="HashMap">
+
+    <!-- 品牌_接单日期_数量 -->
+    <select id="getBrandRevOdrQty" parameterType="String" resultType="HashMap">
         SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
         FROM v_order_order_analyze
         WHERE fact_no = #{factNo}
-          AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrYear}
+        <if test=" revOdrDateByToday != null and revOdrDateByToday != '' ">
+            AND rev_odr_date = #{revOdrDateByToday}
+        </if>
+        <if test=" revOdrDateByWeek != null and revOdrDateByWeek != '' ">
+            AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
+                         'yyyymmdd') =
+                TO_CHAR (TRUNC (TO_DATE (#{revOdrDateByWeek}, 'yyyymmdd'), 'iw'),
+                         'yyyymmdd')
+        </if>
+        <if test=" revOdrDateByMonth != null and revOdrDateByMonth != '' ">
+            AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrDateByMonth}
+        </if>
+        <if test=" revOdrDateByYear != null and revOdrDateByYear != '' ">
+            AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrDateByYear}
+        </if>
+        <if test=" dateStart != null and dateStart != '' and dateEnd != null and dateEnd != '' ">
+            AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
+        </if>
         GROUP BY brand_nm
         ORDER BY SUM (odr_qty) DESC
     </select>
-    <select id="getStyleRevByYear" parameterType="String" resultType="HashMap">
+
+    <!-- 型体_接单日期_数量 -->
+    <select id="getStyleRevOdrQty" parameterType="String" resultType="HashMap">
         SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
         FROM v_order_order_analyze
         WHERE fact_no = #{factNo}
-          AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrYear}
+        <choose>
+            <when test=" revOdrDateByToday != null and revOdrDateByToday != '' ">
+                AND rev_odr_date = #{revOdrDateByToday}
+            </when>
+            <when test=" revOdrDateByWeek != null and revOdrDateByWeek != '' ">
+                AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
+                'yyyymmdd') =
+                TO_CHAR (TRUNC (TO_DATE (#{revOdrDateByWeek}, 'yyyymmdd'), 'iw'),
+                'yyyymmdd')
+            </when>
+            <when test=" revOdrDateByMonth != null and revOdrDateByMonth != '' ">
+                AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrDateByMonth}
+            </when>
+            <when test=" revOdrDateByYear != null and revOdrDateByYear != '' ">
+                AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrDateByYear}
+            </when>
+            <when test=" dateStart != null and dateStart != '' and dateEnd != null and dateEnd != '' ">
+                AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
+            </when>
+        </choose>
         GROUP BY artic_no
         ORDER BY SUM (odr_qty) DESC
     </select>
 
-    <!-- 用户所选日期期间 -->
-    <select id="getCustRevByPeriod" parameterType="String" resultType="HashMap">
-        SELECT custom_fnm "nm", SUM (odr_qty) "odr_qty"
+    <!-- 目的地_接单日期_数量 -->
+    <select id="getDestRevOdrQty" parameterType="String" resultType="HashMap">
+        SELECT dest_country "nm", SUM (odr_qty) "odr_qty"
         FROM v_order_order_analyze
         WHERE fact_no = #{factNo}
-          AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
-        GROUP BY custom_fnm
-        ORDER BY SUM (odr_qty) DESC
-    </select>
-    <select id="getBrandRevByPeriod" parameterType="String" resultType="HashMap">
-        SELECT TRIM (brand_nm) "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE fact_no = #{factNo}
-          AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
-        GROUP BY brand_nm
-        ORDER BY SUM (odr_qty) DESC
-    </select>
-    <select id="getStyleRevByPeriod" parameterType="String" resultType="HashMap">
-        SELECT TRIM (artic_no) "nm", SUM (odr_qty) "odr_qty"
-        FROM v_order_order_analyze
-        WHERE fact_no = #{factNo}
-          AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
-        GROUP BY artic_no
+        <choose>
+            <when test=" revOdrDateByToday != null and revOdrDateByToday != '' ">
+                AND rev_odr_date = #{revOdrDateByToday}
+            </when>
+            <when test=" revOdrDateByWeek != null and revOdrDateByWeek != '' ">
+                AND TO_CHAR (TRUNC (TO_DATE (rev_odr_date, 'yyyymmdd'), 'iw'),
+                'yyyymmdd') =
+                TO_CHAR (TRUNC (TO_DATE (#{revOdrDateByWeek}, 'yyyymmdd'), 'iw'),
+                'yyyymmdd')
+            </when>
+            <when test=" revOdrDateByMonth != null and revOdrDateByMonth != '' ">
+                AND SUBSTR (rev_odr_date, 1, 6) = #{revOdrDateByMonth}
+            </when>
+            <when test=" revOdrDateByYear != null and revOdrDateByYear != '' ">
+                AND SUBSTR (rev_odr_date, 1, 4) = #{revOdrDateByYear}
+            </when>
+            <when test=" dateStart != null and dateStart != '' and dateEnd != null and dateEnd != '' ">
+                AND rev_odr_date BETWEEN #{dateStart} AND #{dateEnd}
+            </when>
+        </choose>
+        GROUP BY dest_country
         ORDER BY SUM (odr_qty) DESC
     </select>
 
