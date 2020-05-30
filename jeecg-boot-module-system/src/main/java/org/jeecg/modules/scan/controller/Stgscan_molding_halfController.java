@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -81,6 +83,7 @@ public class Stgscan_molding_halfController {
 	@AutoLog(value = "半成品产量表-添加")
 	@ApiOperation(value="半成品产量表-添加", notes="半成品产量表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("stgscan_molding_half:add")
 	public Result<Stgscan_molding_half> add(@RequestBody Stgscan_molding_half stgscan_molding_half) {
 		Result<Stgscan_molding_half> result = new Result<Stgscan_molding_half>();
 		try {
@@ -101,6 +104,7 @@ public class Stgscan_molding_halfController {
 	@AutoLog(value = "半成品产量表-编辑")
 	@ApiOperation(value="半成品产量表-编辑", notes="半成品产量表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("stgscan_molding_half:edit")
 	public Result<Stgscan_molding_half> edit(@RequestBody Stgscan_molding_half stgscan_molding_half) {
 		Result<Stgscan_molding_half> result = new Result<Stgscan_molding_half>();
 		Stgscan_molding_half stgscan_molding_halfEntity = stgscan_molding_halfService.getById(stgscan_molding_half.getId());
@@ -125,6 +129,7 @@ public class Stgscan_molding_halfController {
 	@AutoLog(value = "半成品产量表-通过id删除")
 	@ApiOperation(value="半成品产量表-通过id删除", notes="半成品产量表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("stgscan_molding_half:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			stgscan_molding_halfService.removeById(id);
@@ -143,6 +148,7 @@ public class Stgscan_molding_halfController {
 	@AutoLog(value = "半成品产量表-批量删除")
 	@ApiOperation(value="半成品产量表-批量删除", notes="半成品产量表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("stgscan_molding_half:deleteBatch")
 	public Result<Stgscan_molding_half> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Stgscan_molding_half> result = new Result<Stgscan_molding_half>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -181,6 +187,7 @@ public class Stgscan_molding_halfController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("stgscan_molding_half:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Stgscan_molding_half> queryWrapper = null;
@@ -214,6 +221,7 @@ public class Stgscan_molding_halfController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("stgscan_molding_half:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

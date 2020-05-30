@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -87,6 +89,7 @@ public class StyletypeController {
 	@AutoLog(value = "鞋型表-添加")
 	@ApiOperation(value="鞋型表-添加", notes="鞋型表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("styletype:add")
 	public Result<Styletype> add(@RequestBody Styletype styletype) {
 		Result<Styletype> result = new Result<Styletype>();
 		try {
@@ -108,6 +111,7 @@ public class StyletypeController {
 	@AutoLog(value = "鞋型表-编辑")
 	@ApiOperation(value="鞋型表-编辑", notes="鞋型表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("styletype:edit")
 	public Result<Styletype> edit(@RequestBody Styletype styletype) {
 		Result<Styletype> result = new Result<Styletype>();
 		Styletype styletypeEntity = styletypeService.getById(styletype.getId());
@@ -133,6 +137,7 @@ public class StyletypeController {
 	@AutoLog(value = "鞋型表-通过id删除")
 	@ApiOperation(value="鞋型表-通过id删除", notes="鞋型表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("styletype:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			styletypeService.removeById(id);
@@ -151,6 +156,7 @@ public class StyletypeController {
 	@AutoLog(value = "鞋型表-批量删除")
 	@ApiOperation(value="鞋型表-批量删除", notes="鞋型表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("styletype:deleteBatch")
 	public Result<Styletype> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Styletype> result = new Result<Styletype>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -189,6 +195,7 @@ public class StyletypeController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("styletype:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Styletype> queryWrapper = null;
@@ -222,6 +229,7 @@ public class StyletypeController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("styletype:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

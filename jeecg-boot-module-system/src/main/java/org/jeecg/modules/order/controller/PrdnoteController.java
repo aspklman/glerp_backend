@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -87,6 +89,7 @@ public class PrdnoteController {
 	@AutoLog(value = "生产注意事项表-添加")
 	@ApiOperation(value="生产注意事项表-添加", notes="生产注意事项表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("prdnote:add")
 	public Result<Prdnote> add(@RequestBody Prdnote prdnote) {
 		Result<Prdnote> result = new Result<Prdnote>();
 		try {
@@ -108,6 +111,7 @@ public class PrdnoteController {
 	@AutoLog(value = "生产注意事项表-编辑")
 	@ApiOperation(value="生产注意事项表-编辑", notes="生产注意事项表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("prdnote:edit")
 	public Result<Prdnote> edit(@RequestBody Prdnote prdnote) {
 		Result<Prdnote> result = new Result<Prdnote>();
 		Prdnote prdnoteEntity = prdnoteService.getById(prdnote.getId());
@@ -133,6 +137,7 @@ public class PrdnoteController {
 	@AutoLog(value = "生产注意事项表-通过id删除")
 	@ApiOperation(value="生产注意事项表-通过id删除", notes="生产注意事项表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("prdnote:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			prdnoteService.removeById(id);
@@ -151,6 +156,7 @@ public class PrdnoteController {
 	@AutoLog(value = "生产注意事项表-批量删除")
 	@ApiOperation(value="生产注意事项表-批量删除", notes="生产注意事项表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("prdnote:deleteBatch")
 	public Result<Prdnote> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Prdnote> result = new Result<Prdnote>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -189,6 +195,7 @@ public class PrdnoteController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("prdnote:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Prdnote> queryWrapper = null;
@@ -222,6 +229,7 @@ public class PrdnoteController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("prdnote:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

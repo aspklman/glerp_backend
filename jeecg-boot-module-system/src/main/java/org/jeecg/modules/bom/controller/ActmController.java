@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -88,6 +90,7 @@ public class ActmController {
 	@AutoLog(value = "动作表-添加")
 	@ApiOperation(value="动作表-添加", notes="动作表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("actm:add")
 	public Result<Actm> add(@RequestBody Actm actm) {
 		Result<Actm> result = new Result<Actm>();
 		try {
@@ -109,6 +112,7 @@ public class ActmController {
 	@AutoLog(value = "动作表-编辑")
 	@ApiOperation(value="动作表-编辑", notes="动作表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("actm:edit")
 	public Result<Actm> edit(@RequestBody Actm actm) {
 		Result<Actm> result = new Result<Actm>();
 		Actm actmEntity = actmService.getById(actm.getId());
@@ -134,6 +138,7 @@ public class ActmController {
 	@AutoLog(value = "动作表-通过id删除")
 	@ApiOperation(value="动作表-通过id删除", notes="动作表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("actm:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			actmService.removeById(id);
@@ -152,6 +157,7 @@ public class ActmController {
 	@AutoLog(value = "动作表-批量删除")
 	@ApiOperation(value="动作表-批量删除", notes="动作表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("actm:deleteBatch")
 	public Result<Actm> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Actm> result = new Result<Actm>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -190,6 +196,7 @@ public class ActmController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("actm:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Actm> queryWrapper = null;
@@ -223,6 +230,7 @@ public class ActmController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("actm:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

@@ -180,16 +180,52 @@
 		    <version>1.4.0</version>
 		</dependency>
 		
+<!--		&lt;!&ndash; Swagger API文档 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--		    <groupId>io.springfox</groupId>-->
+<!--		    <artifactId>springfox-swagger2</artifactId>-->
+<!--		    <version>2.9.2</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--		    <groupId>io.springfox</groupId>-->
+<!--		    <artifactId>springfox-swagger-ui</artifactId>-->
+<!--		    <version>2.9.2</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>com.github.xiaoymin</groupId>-->
+<!--			<artifactId>swagger-bootstrap-ui</artifactId>-->
+<!--			<version>1.9.3</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>io.springfox</groupId>-->
+<!--			<artifactId>springfox-bean-validators</artifactId>-->
+<!--			<version>2.9.2</version>-->
+<!--		</dependency>-->
+
 		<!-- Swagger API文档 -->
-        <dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger2</artifactId>
-		    <version>2.9.2</version>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>swagger-annotations</artifactId>
+					<groupId>io.swagger</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>swagger-models</artifactId>
+					<groupId>io.swagger</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger-ui</artifactId>
-		    <version>2.9.2</version>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.xiaoymin</groupId>
@@ -200,6 +236,23 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-bean-validators</artifactId>
 			<version>2.9.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- # 增加两个配置解决 NumberFormatException -->
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>1.5.22</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-models</artifactId>
+			<version>1.5.22</version>
 		</dependency>
 		
 		

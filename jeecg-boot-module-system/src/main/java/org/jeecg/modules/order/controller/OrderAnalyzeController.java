@@ -93,9 +93,9 @@ public class OrderAnalyzeController {
                 dateStart = periodArray[0];
                 dateEnd = periodArray[1];
             }
-            log.info("tabKind参数3：" + dateKindName + '/' + revOdrDateByToday + "/" + revOdrDateByWeek + '/'  + revOdrDateByMonth + "/" + revOdrDateByYear + '/'  + dateStart + "/" + dateEnd);
+            log.info("客户-参数：" + dateKindName + '/' + revOdrDateByToday + "/" + revOdrDateByWeek + '/'  + revOdrDateByMonth + "/" + revOdrDateByYear + '/'  + dateStart + "/" + dateEnd);
             List<Map<String, Object>> custOdrQtyMap = this.orderAnalyzeService.getCustRevOdrQty(factNo, revOdrDateByToday, revOdrDateByWeek, revOdrDateByMonth, revOdrDateByYear, dateStart, dateEnd);
-            log.info("订单数:" + custOdrQtyMap);
+            log.info("返回订单数:" + custOdrQtyMap);
             result.setResult(custOdrQtyMap);
             result.success("查询成功！");
         } catch (Exception e) {
@@ -144,9 +144,9 @@ public class OrderAnalyzeController {
                 dateStart = periodArray[0];
                 dateEnd = periodArray[1];
             }
-            log.info("tabKind参数3：" + dateKindName + '/' + revOdrDateByToday + "/" + revOdrDateByWeek + '/'  + revOdrDateByMonth + "/" + revOdrDateByYear + '/'  + dateStart + "/" + dateEnd);
+            log.info("品牌-参数：" + dateKindName + '/' + revOdrDateByToday + "/" + revOdrDateByWeek + '/'  + revOdrDateByMonth + "/" + revOdrDateByYear + '/'  + dateStart + "/" + dateEnd);
             List<Map<String, Object>> custOdrQtyMap = this.orderAnalyzeService.getBrandRevOdrQty(factNo, revOdrDateByToday, revOdrDateByWeek, revOdrDateByMonth, revOdrDateByYear, dateStart, dateEnd);
-            log.info("订单数:" + custOdrQtyMap);
+            log.info("返回订单数:" + custOdrQtyMap);
             result.setResult(custOdrQtyMap);
             result.success("查询成功！");
         } catch (Exception e) {
@@ -195,9 +195,9 @@ public class OrderAnalyzeController {
                 dateStart = periodArray[0];
                 dateEnd = periodArray[1];
             }
-            log.info("tabKind参数3：" + dateKindName + '/' + revOdrDateByToday + "/" + revOdrDateByWeek + '/'  + revOdrDateByMonth + "/" + revOdrDateByYear + '/'  + dateStart + "/" + dateEnd);
+            log.info("型体-参数：" + dateKindName + '/' + revOdrDateByToday + "/" + revOdrDateByWeek + '/'  + revOdrDateByMonth + "/" + revOdrDateByYear + '/'  + dateStart + "/" + dateEnd);
             List<Map<String, Object>> custOdrQtyMap = this.orderAnalyzeService.getStyleRevOdrQty(factNo, revOdrDateByToday, revOdrDateByWeek, revOdrDateByMonth, revOdrDateByYear, dateStart, dateEnd);
-            log.info("订单数:" + custOdrQtyMap);
+            log.info("返回订单数:" + custOdrQtyMap);
             result.setResult(custOdrQtyMap);
             result.success("查询成功！");
         } catch (Exception e) {
@@ -246,9 +246,9 @@ public class OrderAnalyzeController {
                 dateStart = periodArray[0];
                 dateEnd = periodArray[1];
             }
-            log.info("tabKind参数3：" + dateKindName + '/' + revOdrDateByToday + "/" + revOdrDateByWeek + '/'  + revOdrDateByMonth + "/" + revOdrDateByYear + '/'  + dateStart + "/" + dateEnd);
+            log.info("目的地-参数：" + dateKindName + '/' + revOdrDateByToday + "/" + revOdrDateByWeek + '/'  + revOdrDateByMonth + "/" + revOdrDateByYear + '/'  + dateStart + "/" + dateEnd);
             List<Map<String, Object>> custOdrQtyMap = this.orderAnalyzeService.getDestRevOdrQty(factNo, revOdrDateByToday, revOdrDateByWeek, revOdrDateByMonth, revOdrDateByYear, dateStart, dateEnd);
-            log.info("订单数:" + custOdrQtyMap);
+            log.info("返回订单数:" + custOdrQtyMap);
             result.setResult(custOdrQtyMap);
             result.success("查询成功！");
         } catch (Exception e) {

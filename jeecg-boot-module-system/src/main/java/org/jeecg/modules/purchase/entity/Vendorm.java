@@ -230,9 +230,9 @@ public class Vendorm {
 	@Excel(name = "供应商简称", width = 15)
     @ApiModelProperty(value = "供应商简称")
 	private java.lang.String vendFnm;
-	/**供应商全名*/
-	@Excel(name = "供应商全名", width = 15)
-    @ApiModelProperty(value = "供应商全名")
+	/**供应商全称*/
+	@Excel(name = "供应商全称", width = 15)
+    @ApiModelProperty(value = "供应商全称")
 	private java.lang.String vendGnm;
 	/**工商备案号*/
 	@Excel(name = "工商备案号", width = 15)

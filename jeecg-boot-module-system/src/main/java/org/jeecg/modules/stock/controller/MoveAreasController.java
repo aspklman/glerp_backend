@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.PermissionData;
 import org.jeecg.common.system.query.QueryGenerator;
@@ -88,50 +89,50 @@ public class MoveAreasController {
 		result.setResult(pageList);
 		return result;
 	}
-	
-	/**
-	  *   添加
-	 * @param moveAreas
-	 * @return
-	 */
-	@AutoLog(value = "成品移库-添加")
-	@ApiOperation(value="成品移库-添加", notes="成品移库-添加")
-	@PostMapping(value = "/add")
-	public Result<MoveAreas> add(@RequestBody MoveAreas moveAreas) {
-		Result<MoveAreas> result = new Result<MoveAreas>();
-		try {
-			moveAreasService.save(moveAreas);
-			result.success("添加成功！");
-		} catch (Exception e) {
-			log.error(e.getMessage(),e);
-			result.error500("操作失败");
-		}
-		return result;
-	}
-	
-	/**
-	  *  编辑
-	 * @param moveAreas
-	 * @return
-	 */
-	@AutoLog(value = "成品移库-编辑")
-	@ApiOperation(value="成品移库-编辑", notes="成品移库-编辑")
-	@PutMapping(value = "/edit")
-	public Result<MoveAreas> edit(@RequestBody MoveAreas moveAreas) {
-		Result<MoveAreas> result = new Result<MoveAreas>();
-		MoveAreas moveAreasEntity = moveAreasService.getById(moveAreas.getId());
-		if(moveAreasEntity==null) {
-			result.error500("未找到对应实体");
-		}else {
-			boolean ok = moveAreasService.updateById(moveAreas);
-			//TODO 返回false说明什么？
-			if(ok) {
-				result.success("修改成功!");
-			}
-		}
-		
-		return result;
-	}
+
+//	/**
+//	  *   添加
+//	 * @param moveAreas
+//	 * @return
+//	 */
+//	@AutoLog(value = "成品移库-添加")
+//	@ApiOperation(value="成品移库-添加", notes="成品移库-添加")
+//	@PostMapping(value = "/add")
+//	public Result<MoveAreas> add(@RequestBody MoveAreas moveAreas) {
+//		Result<MoveAreas> result = new Result<MoveAreas>();
+//		try {
+//			moveAreasService.save(moveAreas);
+//			result.success("添加成功！");
+//		} catch (Exception e) {
+//			log.error(e.getMessage(),e);
+//			result.error500("操作失败");
+//		}
+//		return result;
+//	}
+//
+//	/**
+//	  *  编辑
+//	 * @param moveAreas
+//	 * @return
+//	 */
+//	@AutoLog(value = "成品移库-编辑")
+//	@ApiOperation(value="成品移库-编辑", notes="成品移库-编辑")
+//	@PutMapping(value = "/edit")
+//	public Result<MoveAreas> edit(@RequestBody MoveAreas moveAreas) {
+//		Result<MoveAreas> result = new Result<MoveAreas>();
+//		MoveAreas moveAreasEntity = moveAreasService.getById(moveAreas.getId());
+//		if(moveAreasEntity==null) {
+//			result.error500("未找到对应实体");
+//		}else {
+//			boolean ok = moveAreasService.updateById(moveAreas);
+//			//TODO 返回false说明什么？
+//			if(ok) {
+//				result.success("修改成功!");
+//			}
+//		}
+//
+//		return result;
+//	}
 
      /**
 	  *  移库
@@ -141,6 +142,7 @@ public class MoveAreasController {
 	 @AutoLog(value = "成品移库-移库")
 	 @ApiOperation(value="成品移库-移库", notes="成品移库-移库")
 	 @GetMapping(value = "/move")
+	 @RequiresPermissions("s_stockm:move")
 	 public Result move(@RequestParam("params") String params) {
 		 Result result = new Result();
 		 if (params == null) {
@@ -221,128 +223,128 @@ public class MoveAreasController {
 		 return result;
 	 }
 	
-	/**
-	  *   通过id删除
-	 * @param id
-	 * @return
-	 */
-	@AutoLog(value = "成品移库-通过id删除")
-	@ApiOperation(value="成品移库-通过id删除", notes="成品移库-通过id删除")
-	@DeleteMapping(value = "/delete")
-	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
-		try {
-			moveAreasService.removeById(id);
-		} catch (Exception e) {
-			log.error("删除失败",e.getMessage());
-			return Result.error("删除失败!");
-		}
-		return Result.ok("删除成功!");
-	}
-	
-	/**
-	  *  批量删除
-	 * @param ids
-	 * @return
-	 */
-	@AutoLog(value = "成品移库-批量删除")
-	@ApiOperation(value="成品移库-批量删除", notes="成品移库-批量删除")
-	@DeleteMapping(value = "/deleteBatch")
-	public Result<MoveAreas> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
-		Result<MoveAreas> result = new Result<MoveAreas>();
-		if(ids==null || "".equals(ids.trim())) {
-			result.error500("参数不识别！");
-		}else {
-			this.moveAreasService.removeByIds(Arrays.asList(ids.split(",")));
-			result.success("删除成功!");
-		}
-		return result;
-	}
-	
-	/**
-	  * 通过id查询
-	 * @param id
-	 * @return
-	 */
-	@AutoLog(value = "成品移库-通过id查询")
-	@ApiOperation(value="成品移库-通过id查询", notes="成品移库-通过id查询")
-	@GetMapping(value = "/queryById")
-	public Result<MoveAreas> queryById(@RequestParam(name="id",required=true) String id) {
-		Result<MoveAreas> result = new Result<MoveAreas>();
-		MoveAreas moveAreas = moveAreasService.getById(id);
-		if(moveAreas==null) {
-			result.error500("未找到对应实体");
-		}else {
-			result.setResult(moveAreas);
-			result.setSuccess(true);
-		}
-		return result;
-	}
-
-  /**
-      * 导出excel
-   *
-   * @param request
-   * @param response
-   */
-  @RequestMapping(value = "/exportXls")
-  public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
-      // Step.1 组装查询条件
-      QueryWrapper<MoveAreas> queryWrapper = null;
-      try {
-          String paramsStr = request.getParameter("paramsStr");
-          if (oConvertUtils.isNotEmpty(paramsStr)) {
-              String deString = URLDecoder.decode(paramsStr, "UTF-8");
-              MoveAreas moveAreas = JSON.parseObject(deString, MoveAreas.class);
-              queryWrapper = QueryGenerator.initQueryWrapper(moveAreas, request.getParameterMap());
-          }
-      } catch (UnsupportedEncodingException e) {
-          e.printStackTrace();
-      }
-
-      //Step.2 AutoPoi 导出Excel
-      ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
-      List<MoveAreas> pageList = moveAreasService.list(queryWrapper);
-      //导出文件名称
-      mv.addObject(NormalExcelConstants.FILE_NAME, "成品移库列表");
-      mv.addObject(NormalExcelConstants.CLASS, MoveAreas.class);
-      mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("成品移库列表数据", "导出人:Jeecg", "导出信息"));
-      mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
-      return mv;
-  }
-
-  /**
-      * 通过excel导入数据
-   *
-   * @param request
-   * @param response
-   * @return
-   */
-  @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-  public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
-      MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-      Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
-      for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
-          MultipartFile file = entity.getValue();// 获取上传文件对象
-          ImportParams params = new ImportParams();
-          params.setTitleRows(2);
-          params.setHeadRows(1);
-          params.setNeedSave(true);
-          try {
-              List<MoveAreas> listMoveAreass = ExcelImportUtil.importExcel(file.getInputStream(), MoveAreas.class, params);
-              moveAreasService.saveBatch(listMoveAreass);
-              return Result.ok("文件导入成功！数据行数:" + listMoveAreass.size());
-          } catch (Exception e) {
-              log.error(e.getMessage(),e);
-              return Result.error("文件导入失败:"+e.getMessage());
-          } finally {
-              try {
-                  file.getInputStream().close();
-              } catch (IOException e) {
-                  e.printStackTrace();
-              }
-          }
-      }
-      return Result.ok("文件导入失败！");
-  }
+//	/**
+//	  *   通过id删除
+//	 * @param id
+//	 * @return
+//	 */
+//	@AutoLog(value = "成品移库-通过id删除")
+//	@ApiOperation(value="成品移库-通过id删除", notes="成品移库-通过id删除")
+//	@DeleteMapping(value = "/delete")
+//	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
+//		try {
+//			moveAreasService.removeById(id);
+//		} catch (Exception e) {
+//			log.error("删除失败",e.getMessage());
+//			return Result.error("删除失败!");
+//		}
+//		return Result.ok("删除成功!");
+//	}
+//
+//	/**
+//	  *  批量删除
+//	 * @param ids
+//	 * @return
+//	 */
+//	@AutoLog(value = "成品移库-批量删除")
+//	@ApiOperation(value="成品移库-批量删除", notes="成品移库-批量删除")
+//	@DeleteMapping(value = "/deleteBatch")
+//	public Result<MoveAreas> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
+//		Result<MoveAreas> result = new Result<MoveAreas>();
+//		if(ids==null || "".equals(ids.trim())) {
+//			result.error500("参数不识别！");
+//		}else {
+//			this.moveAreasService.removeByIds(Arrays.asList(ids.split(",")));
+//			result.success("删除成功!");
+//		}
+//		return result;
+//	}
+//
+//	/**
+//	  * 通过id查询
+//	 * @param id
+//	 * @return
+//	 */
+//	@AutoLog(value = "成品移库-通过id查询")
+//	@ApiOperation(value="成品移库-通过id查询", notes="成品移库-通过id查询")
+//	@GetMapping(value = "/queryById")
+//	public Result<MoveAreas> queryById(@RequestParam(name="id",required=true) String id) {
+//		Result<MoveAreas> result = new Result<MoveAreas>();
+//		MoveAreas moveAreas = moveAreasService.getById(id);
+//		if(moveAreas==null) {
+//			result.error500("未找到对应实体");
+//		}else {
+//			result.setResult(moveAreas);
+//			result.setSuccess(true);
+//		}
+//		return result;
+//	}
+//
+//  /**
+//      * 导出excel
+//   *
+//   * @param request
+//   * @param response
+//   */
+//  @RequestMapping(value = "/exportXls")
+//  public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
+//      // Step.1 组装查询条件
+//      QueryWrapper<MoveAreas> queryWrapper = null;
+//      try {
+//          String paramsStr = request.getParameter("paramsStr");
+//          if (oConvertUtils.isNotEmpty(paramsStr)) {
+//              String deString = URLDecoder.decode(paramsStr, "UTF-8");
+//              MoveAreas moveAreas = JSON.parseObject(deString, MoveAreas.class);
+//              queryWrapper = QueryGenerator.initQueryWrapper(moveAreas, request.getParameterMap());
+//          }
+//      } catch (UnsupportedEncodingException e) {
+//          e.printStackTrace();
+//      }
+//
+//      //Step.2 AutoPoi 导出Excel
+//      ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
+//      List<MoveAreas> pageList = moveAreasService.list(queryWrapper);
+//      //导出文件名称
+//      mv.addObject(NormalExcelConstants.FILE_NAME, "成品移库列表");
+//      mv.addObject(NormalExcelConstants.CLASS, MoveAreas.class);
+//      mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("成品移库列表数据", "导出人:Jeecg", "导出信息"));
+//      mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
+//      return mv;
+//  }
+//
+//  /**
+//      * 通过excel导入数据
+//   *
+//   * @param request
+//   * @param response
+//   * @return
+//   */
+//  @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+//  public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
+//      MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+//      Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+//      for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
+//          MultipartFile file = entity.getValue();// 获取上传文件对象
+//          ImportParams params = new ImportParams();
+//          params.setTitleRows(2);
+//          params.setHeadRows(1);
+//          params.setNeedSave(true);
+//          try {
+//              List<MoveAreas> listMoveAreass = ExcelImportUtil.importExcel(file.getInputStream(), MoveAreas.class, params);
+//              moveAreasService.saveBatch(listMoveAreass);
+//              return Result.ok("文件导入成功！数据行数:" + listMoveAreass.size());
+//          } catch (Exception e) {
+//              log.error(e.getMessage(),e);
+//              return Result.error("文件导入失败:"+e.getMessage());
+//          } finally {
+//              try {
+//                  file.getInputStream().close();
+//              } catch (IOException e) {
+//                  e.printStackTrace();
+//              }
+//          }
+//      }
+//      return Result.ok("文件导入失败！");
+//  }
 
 }

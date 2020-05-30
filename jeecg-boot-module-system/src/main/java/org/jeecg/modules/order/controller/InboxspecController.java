@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -87,6 +89,7 @@ public class InboxspecController {
 	@AutoLog(value = "内盒规格表-添加")
 	@ApiOperation(value="内盒规格表-添加", notes="内盒规格表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("inboxspec:add")
 	public Result<Inboxspec> add(@RequestBody Inboxspec inboxspec) {
 		Result<Inboxspec> result = new Result<Inboxspec>();
 		try {
@@ -109,6 +112,7 @@ public class InboxspecController {
 	@AutoLog(value = "内盒规格表-编辑")
 	@ApiOperation(value="内盒规格表-编辑", notes="内盒规格表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("inboxspec:edit")
 	public Result<Inboxspec> edit(@RequestBody Inboxspec inboxspec) {
 		Result<Inboxspec> result = new Result<Inboxspec>();
 		Inboxspec inboxspecEntity = inboxspecService.getById(inboxspec.getId());
@@ -135,6 +139,7 @@ public class InboxspecController {
 	@AutoLog(value = "内盒规格表-通过id删除")
 	@ApiOperation(value="内盒规格表-通过id删除", notes="内盒规格表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("inboxspec:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			inboxspecService.removeById(id);
@@ -153,6 +158,7 @@ public class InboxspecController {
 	@AutoLog(value = "内盒规格表-批量删除")
 	@ApiOperation(value="内盒规格表-批量删除", notes="内盒规格表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("inboxspec:deleteBatch")
 	public Result<Inboxspec> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Inboxspec> result = new Result<Inboxspec>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -191,6 +197,7 @@ public class InboxspecController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("inboxspec:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Inboxspec> queryWrapper = null;
@@ -224,6 +231,7 @@ public class InboxspecController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("inboxspec:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

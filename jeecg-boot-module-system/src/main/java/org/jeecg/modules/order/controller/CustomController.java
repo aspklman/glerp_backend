@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -88,6 +90,7 @@ public class CustomController {
 	@AutoLog(value = "客户表-添加")
 	@ApiOperation(value="客户表-添加", notes="客户表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("custom:add")
 	public Result<Custom> add(@RequestBody Custom custom) {
 		Result<Custom> result = new Result<Custom>();
 		try {
@@ -113,6 +116,7 @@ public class CustomController {
 	@AutoLog(value = "客户表-编辑")
 	@ApiOperation(value="客户表-编辑", notes="客户表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("custom:edit")
 	public Result<Custom> edit(@RequestBody Custom custom) {
 		Result<Custom> result = new Result<Custom>();
 		Custom customEntity = customService.getById(custom.getId());
@@ -142,6 +146,7 @@ public class CustomController {
 	@AutoLog(value = "客户表-通过id删除")
 	@ApiOperation(value="客户表-通过id删除", notes="客户表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("custom:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			customService.removeById(id);
@@ -160,6 +165,7 @@ public class CustomController {
 	@AutoLog(value = "客户表-批量删除")
 	@ApiOperation(value="客户表-批量删除", notes="客户表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("custom:deleteBatch")
 	public Result<Custom> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Custom> result = new Result<Custom>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -198,6 +204,7 @@ public class CustomController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("custom:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Custom> queryWrapper = null;
@@ -231,6 +238,7 @@ public class CustomController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("custom:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
