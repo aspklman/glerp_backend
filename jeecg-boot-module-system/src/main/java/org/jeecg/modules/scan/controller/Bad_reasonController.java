@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -81,6 +83,7 @@ public class Bad_reasonController {
 	@AutoLog(value = "不良原因(新材)表-添加")
 	@ApiOperation(value="不良原因(新材)表-添加", notes="不良原因(新材)表-添加")
 	@PostMapping(value = "/add")
+    @RequiresPermissions("bad_reason:add")
 	public Result<Bad_reason> add(@RequestBody Bad_reason bad_reason) {
 		Result<Bad_reason> result = new Result<Bad_reason>();
 		try {
@@ -101,6 +104,7 @@ public class Bad_reasonController {
 	@AutoLog(value = "不良原因(新材)表-编辑")
 	@ApiOperation(value="不良原因(新材)表-编辑", notes="不良原因(新材)表-编辑")
 	@PutMapping(value = "/edit")
+    @RequiresPermissions("bad_reason:edit")
 	public Result<Bad_reason> edit(@RequestBody Bad_reason bad_reason) {
 		Result<Bad_reason> result = new Result<Bad_reason>();
 		Bad_reason bad_reasonEntity = bad_reasonService.getById(bad_reason.getId());
@@ -125,6 +129,7 @@ public class Bad_reasonController {
 	@AutoLog(value = "不良原因(新材)表-通过id删除")
 	@ApiOperation(value="不良原因(新材)表-通过id删除", notes="不良原因(新材)表-通过id删除")
 	@DeleteMapping(value = "/delete")
+    @RequiresPermissions("bad_reason:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			bad_reasonService.removeById(id);
@@ -143,6 +148,7 @@ public class Bad_reasonController {
 	@AutoLog(value = "不良原因(新材)表-批量删除")
 	@ApiOperation(value="不良原因(新材)表-批量删除", notes="不良原因(新材)表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+    @RequiresPermissions("bad_reason:deleteBatch")
 	public Result<Bad_reason> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Bad_reason> result = new Result<Bad_reason>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -181,6 +187,7 @@ public class Bad_reasonController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("bad_reason:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Bad_reason> queryWrapper = null;
@@ -214,6 +221,7 @@ public class Bad_reasonController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("bad_reason:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

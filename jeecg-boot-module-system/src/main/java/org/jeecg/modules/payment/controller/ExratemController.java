@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -81,6 +83,7 @@ public class ExratemController {
 	@AutoLog(value = "汇率表-添加")
 	@ApiOperation(value="汇率表-添加", notes="汇率表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("exratem:add")
 	public Result<Exratem> add(@RequestBody Exratem exratem) {
 		Result<Exratem> result = new Result<Exratem>();
 		try {
@@ -101,6 +104,7 @@ public class ExratemController {
 	@AutoLog(value = "汇率表-编辑")
 	@ApiOperation(value="汇率表-编辑", notes="汇率表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("exratem:edit")
 	public Result<Exratem> edit(@RequestBody Exratem exratem) {
 		Result<Exratem> result = new Result<Exratem>();
 		Exratem exratemEntity = exratemService.getById(exratem.getId());
@@ -125,6 +129,7 @@ public class ExratemController {
 	@AutoLog(value = "汇率表-通过id删除")
 	@ApiOperation(value="汇率表-通过id删除", notes="汇率表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("exratem:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			exratemService.removeById(id);
@@ -143,6 +148,7 @@ public class ExratemController {
 	@AutoLog(value = "汇率表-批量删除")
 	@ApiOperation(value="汇率表-批量删除", notes="汇率表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("exratem:deleteBatch")
 	public Result<Exratem> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Exratem> result = new Result<Exratem>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -181,6 +187,7 @@ public class ExratemController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("exratem:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Exratem> queryWrapper = null;
@@ -214,6 +221,7 @@ public class ExratemController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("exratem:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

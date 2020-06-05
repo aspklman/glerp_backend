@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -81,6 +83,7 @@ public class Stgscan_error_lockController {
 	@AutoLog(value = "扫描错误锁定表-添加")
 	@ApiOperation(value="扫描错误锁定表-添加", notes="扫描错误锁定表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("stgscan_error_lock:add")
 	public Result<Stgscan_error_lock> add(@RequestBody Stgscan_error_lock stgscan_error_lock) {
 		Result<Stgscan_error_lock> result = new Result<Stgscan_error_lock>();
 		try {
@@ -101,6 +104,7 @@ public class Stgscan_error_lockController {
 	@AutoLog(value = "扫描错误锁定表-编辑")
 	@ApiOperation(value="扫描错误锁定表-编辑", notes="扫描错误锁定表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("stgscan_error_lock:edit")
 	public Result<Stgscan_error_lock> edit(@RequestBody Stgscan_error_lock stgscan_error_lock) {
 		Result<Stgscan_error_lock> result = new Result<Stgscan_error_lock>();
 		Stgscan_error_lock stgscan_error_lockEntity = stgscan_error_lockService.getById(stgscan_error_lock.getId());
@@ -125,6 +129,7 @@ public class Stgscan_error_lockController {
 	@AutoLog(value = "扫描错误锁定表-通过id删除")
 	@ApiOperation(value="扫描错误锁定表-通过id删除", notes="扫描错误锁定表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("stgscan_error_lock:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			stgscan_error_lockService.removeById(id);
@@ -143,6 +148,7 @@ public class Stgscan_error_lockController {
 	@AutoLog(value = "扫描错误锁定表-批量删除")
 	@ApiOperation(value="扫描错误锁定表-批量删除", notes="扫描错误锁定表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("stgscan_error_lock:deleteBatch")
 	public Result<Stgscan_error_lock> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Stgscan_error_lock> result = new Result<Stgscan_error_lock>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -181,6 +187,7 @@ public class Stgscan_error_lockController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("stgscan_error_lock:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Stgscan_error_lock> queryWrapper = null;
@@ -214,6 +221,7 @@ public class Stgscan_error_lockController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("stgscan_error_lock:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

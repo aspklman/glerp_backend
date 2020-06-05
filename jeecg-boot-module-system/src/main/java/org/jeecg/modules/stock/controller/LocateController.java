@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -81,6 +83,7 @@ public class LocateController {
 	@AutoLog(value = "存放区域表-添加")
 	@ApiOperation(value="存放区域表-添加", notes="存放区域表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("locate:add")
 	public Result<Locate> add(@RequestBody Locate locate) {
 		Result<Locate> result = new Result<Locate>();
 		try {
@@ -101,6 +104,7 @@ public class LocateController {
 	@AutoLog(value = "存放区域表-编辑")
 	@ApiOperation(value="存放区域表-编辑", notes="存放区域表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("locate:edit")
 	public Result<Locate> edit(@RequestBody Locate locate) {
 		Result<Locate> result = new Result<Locate>();
 		Locate locateEntity = locateService.getById(locate.getId());
@@ -125,6 +129,7 @@ public class LocateController {
 	@AutoLog(value = "存放区域表-通过id删除")
 	@ApiOperation(value="存放区域表-通过id删除", notes="存放区域表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("locate:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			locateService.removeById(id);
@@ -143,6 +148,7 @@ public class LocateController {
 	@AutoLog(value = "存放区域表-批量删除")
 	@ApiOperation(value="存放区域表-批量删除", notes="存放区域表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("locate:deleteBatch")
 	public Result<Locate> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Locate> result = new Result<Locate>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -181,6 +187,7 @@ public class LocateController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("locate:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Locate> queryWrapper = null;
@@ -214,6 +221,7 @@ public class LocateController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("locate:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

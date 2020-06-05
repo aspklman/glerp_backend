@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -81,6 +83,7 @@ public class Plan_prodController {
 	@AutoLog(value = "成型目标产量(新材)表-添加")
 	@ApiOperation(value="成型目标产量(新材)表-添加", notes="成型目标产量(新材)表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("plan_prod:add")
 	public Result<Plan_prod> add(@RequestBody Plan_prod plan_prod) {
 		Result<Plan_prod> result = new Result<Plan_prod>();
 		try {
@@ -101,6 +104,7 @@ public class Plan_prodController {
 	@AutoLog(value = "成型目标产量(新材)表-编辑")
 	@ApiOperation(value="成型目标产量(新材)表-编辑", notes="成型目标产量(新材)表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("plan_prod:edit")
 	public Result<Plan_prod> edit(@RequestBody Plan_prod plan_prod) {
 		Result<Plan_prod> result = new Result<Plan_prod>();
 		Plan_prod plan_prodEntity = plan_prodService.getById(plan_prod.getId());
@@ -125,6 +129,7 @@ public class Plan_prodController {
 	@AutoLog(value = "成型目标产量(新材)表-通过id删除")
 	@ApiOperation(value="成型目标产量(新材)表-通过id删除", notes="成型目标产量(新材)表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("plan_prod:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			plan_prodService.removeById(id);
@@ -143,6 +148,7 @@ public class Plan_prodController {
 	@AutoLog(value = "成型目标产量(新材)表-批量删除")
 	@ApiOperation(value="成型目标产量(新材)表-批量删除", notes="成型目标产量(新材)表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("plan_prod:deleteBatch")
 	public Result<Plan_prod> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Plan_prod> result = new Result<Plan_prod>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -181,6 +187,7 @@ public class Plan_prodController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("plan_prod:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Plan_prod> queryWrapper = null;
@@ -214,6 +221,7 @@ public class Plan_prodController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("plan_prod:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

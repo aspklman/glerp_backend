@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -87,6 +89,7 @@ public class VacodeController {
 	@AutoLog(value = "增值表-添加")
 	@ApiOperation(value="增值表-添加", notes="增值表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("vacode:add")
 	public Result<Vacode> add(@RequestBody Vacode vacode) {
 		Result<Vacode> result = new Result<Vacode>();
 		try {
@@ -110,6 +113,7 @@ public class VacodeController {
 	@AutoLog(value = "增值表-编辑")
 	@ApiOperation(value="增值表-编辑", notes="增值表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("vacode:edit")
 	public Result<Vacode> edit(@RequestBody Vacode vacode) {
 		Result<Vacode> result = new Result<Vacode>();
 		Vacode vacodeEntity = vacodeService.getById(vacode.getId());
@@ -137,6 +141,7 @@ public class VacodeController {
 	@AutoLog(value = "增值表-通过id删除")
 	@ApiOperation(value="增值表-通过id删除", notes="增值表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("vacode:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			vacodeService.removeById(id);
@@ -155,6 +160,7 @@ public class VacodeController {
 	@AutoLog(value = "增值表-批量删除")
 	@ApiOperation(value="增值表-批量删除", notes="增值表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("vacode:deleteBatch")
 	public Result<Vacode> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Vacode> result = new Result<Vacode>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -193,6 +199,7 @@ public class VacodeController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("vacode:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Vacode> queryWrapper = null;
@@ -226,6 +233,7 @@ public class VacodeController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("vacode:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

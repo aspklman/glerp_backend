@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -81,6 +83,7 @@ public class AreasController {
 	@AutoLog(value = "存放地点表-添加")
 	@ApiOperation(value="存放地点表-添加", notes="存放地点表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("areas:add")
 	public Result<Areas> add(@RequestBody Areas areas) {
 		Result<Areas> result = new Result<Areas>();
 		try {
@@ -101,6 +104,7 @@ public class AreasController {
 	@AutoLog(value = "存放地点表-编辑")
 	@ApiOperation(value="存放地点表-编辑", notes="存放地点表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("areas:edit")
 	public Result<Areas> edit(@RequestBody Areas areas) {
 		Result<Areas> result = new Result<Areas>();
 		Areas areasEntity = areasService.getById(areas.getId());
@@ -125,6 +129,7 @@ public class AreasController {
 	@AutoLog(value = "存放地点表-通过id删除")
 	@ApiOperation(value="存放地点表-通过id删除", notes="存放地点表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("areas:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			areasService.removeById(id);
@@ -143,6 +148,7 @@ public class AreasController {
 	@AutoLog(value = "存放地点表-批量删除")
 	@ApiOperation(value="存放地点表-批量删除", notes="存放地点表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("areas:deleteBatch")
 	public Result<Areas> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Areas> result = new Result<Areas>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -181,6 +187,7 @@ public class AreasController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("areas:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Areas> queryWrapper = null;
@@ -214,6 +221,7 @@ public class AreasController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("areas:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

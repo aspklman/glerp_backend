@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -81,6 +83,7 @@ public class VouareasonmController {
 	@AutoLog(value = "领料原因表-添加")
 	@ApiOperation(value="领料原因表-添加", notes="领料原因表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("vouareasonm:add")
 	public Result<Vouareasonm> add(@RequestBody Vouareasonm vouareasonm) {
 		Result<Vouareasonm> result = new Result<Vouareasonm>();
 		try {
@@ -101,6 +104,7 @@ public class VouareasonmController {
 	@AutoLog(value = "领料原因表-编辑")
 	@ApiOperation(value="领料原因表-编辑", notes="领料原因表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("vouareasonm:edit")
 	public Result<Vouareasonm> edit(@RequestBody Vouareasonm vouareasonm) {
 		Result<Vouareasonm> result = new Result<Vouareasonm>();
 		Vouareasonm vouareasonmEntity = vouareasonmService.getById(vouareasonm.getId());
@@ -125,6 +129,7 @@ public class VouareasonmController {
 	@AutoLog(value = "领料原因表-通过id删除")
 	@ApiOperation(value="领料原因表-通过id删除", notes="领料原因表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("vouareasonm:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			vouareasonmService.removeById(id);
@@ -143,6 +148,7 @@ public class VouareasonmController {
 	@AutoLog(value = "领料原因表-批量删除")
 	@ApiOperation(value="领料原因表-批量删除", notes="领料原因表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("vouareasonm:deleteBatch")
 	public Result<Vouareasonm> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Vouareasonm> result = new Result<Vouareasonm>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -181,6 +187,7 @@ public class VouareasonmController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("vouareasonm:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Vouareasonm> queryWrapper = null;
@@ -214,6 +221,7 @@ public class VouareasonmController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("vouareasonm:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

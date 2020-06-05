@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -81,6 +83,7 @@ public class StkidmController {
 	@AutoLog(value = "仓库表-添加")
 	@ApiOperation(value="仓库表-添加", notes="仓库表-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("stkidm:add")
 	public Result<Stkidm> add(@RequestBody Stkidm stkidm) {
 		Result<Stkidm> result = new Result<Stkidm>();
 		try {
@@ -101,6 +104,7 @@ public class StkidmController {
 	@AutoLog(value = "仓库表-编辑")
 	@ApiOperation(value="仓库表-编辑", notes="仓库表-编辑")
 	@PutMapping(value = "/edit")
+	@RequiresPermissions("stkidm:edit")
 	public Result<Stkidm> edit(@RequestBody Stkidm stkidm) {
 		Result<Stkidm> result = new Result<Stkidm>();
 		Stkidm stkidmEntity = stkidmService.getById(stkidm.getId());
@@ -125,6 +129,7 @@ public class StkidmController {
 	@AutoLog(value = "仓库表-通过id删除")
 	@ApiOperation(value="仓库表-通过id删除", notes="仓库表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("stkidm:delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			stkidmService.removeById(id);
@@ -143,6 +148,7 @@ public class StkidmController {
 	@AutoLog(value = "仓库表-批量删除")
 	@ApiOperation(value="仓库表-批量删除", notes="仓库表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("stkidm:deleteBatch")
 	public Result<Stkidm> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<Stkidm> result = new Result<Stkidm>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -181,6 +187,7 @@ public class StkidmController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @RequiresPermissions("stkidm:exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<Stkidm> queryWrapper = null;
@@ -214,6 +221,7 @@ public class StkidmController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @RequiresPermissions("stkidm:importExcel")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
