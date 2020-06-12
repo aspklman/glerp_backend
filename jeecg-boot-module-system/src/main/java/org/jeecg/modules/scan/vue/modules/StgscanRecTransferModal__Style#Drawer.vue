@@ -1,0 +1,180 @@
+<template>
+  <a-drawer
+      :title="title"
+      :width="800"
+      placement="right"
+      :closable="false"
+      @close="close"
+      :visible="visible"
+  >
+
+    <a-spin :spinning="confirmLoading">
+      <a-form :form="form">
+      
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="厂区编号">
+          <a-input placeholder="请输入厂区编号" v-decorator="['factNo', validatorRules.factNo ]" />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="阶段编号">
+          <a-input placeholder="请输入阶段编号" v-decorator="['stgNo', validatorRules.stgNo ]" />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="库别编号">
+          <a-input placeholder="请输入库别编号" v-decorator="['stkNo', validatorRules.stkNo ]" />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="条码编号">
+          <a-input placeholder="请输入条码编号" v-decorator="['barNo', validatorRules.barNo ]" />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="扫描时间">
+          <a-date-picker v-decorator="[ 'scanTime', validatorRules.scanTime ]" />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="存放区域">
+          <a-input placeholder="请输入存放区域" v-decorator="['locNo', {}]" />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="存放地点">
+          <a-input placeholder="请输入存放地点" v-decorator="['locArea', {}]" />
+        </a-form-item>
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="更新标记">
+          <a-input placeholder="请输入更新标记" v-decorator="['updateRmk', {}]" />
+        </a-form-item>
+		
+      </a-form>
+    </a-spin>
+    <a-button type="primary" @click="handleOk">确定</a-button>
+    <a-button type="primary" @click="handleCancel">取消</a-button>
+  </a-drawer>
+</template>
+
+<script>
+  import { httpAction } from '@/api/manage'
+  import pick from 'lodash.pick'
+  import moment from "moment"
+
+  export default {
+    name: "StgscanRecTransferModal",
+    data () {
+      return {
+        title:"操作",
+        visible: false,
+        model: {},
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 5 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
+
+        confirmLoading: false,
+        form: this.$form.createForm(this),
+        validatorRules:{
+        factNo:{rules: [{ required: true, message: '请输入厂区编号!' }]},
+        stgNo:{rules: [{ required: true, message: '请输入阶段编号!' }]},
+        stkNo:{rules: [{ required: true, message: '请输入库别编号!' }]},
+        barNo:{rules: [{ required: true, message: '请输入条码编号!' }]},
+        scanTime:{rules: [{ required: true, message: '请输入扫描时间!' }]},
+        },
+        url: {
+          add: "/scan/stgscanRecTransfer/add",
+          edit: "/scan/stgscanRecTransfer/edit",
+        },
+      }
+    },
+    created () {
+    },
+    methods: {
+      add () {
+        this.edit({});
+      },
+      edit (record) {
+        this.form.resetFields();
+        this.model = Object.assign({}, record);
+        this.visible = true;
+        this.$nextTick(() => {
+          this.form.setFieldsValue(pick(this.model,'factNo','stgNo','stkNo','barNo','locNo','locArea','updateRmk'))
+		  //时间格式化
+          this.form.setFieldsValue({scanTime:this.model.scanTime?moment(this.model.scanTime):null})
+        });
+
+      },
+      close () {
+        this.$emit('close');
+        this.visible = false;
+      },
+      handleOk () {
+        const that = this;
+        // 触发表单验证
+        this.form.validateFields((err, values) => {
+          if (!err) {
+            that.confirmLoading = true;
+            let httpurl = '';
+            let method = '';
+            if(!this.model.id){
+              httpurl+=this.url.add;
+              method = 'post';
+            }else{
+              httpurl+=this.url.edit;
+               method = 'put';
+            }
+            let formData = Object.assign(this.model, values);
+            //时间格式化
+            formData.scanTime = formData.scanTime?formData.scanTime.format():null;
+            
+            console.log(formData)
+            httpAction(httpurl,formData,method).then((res)=>{
+              if(res.success){
+                that.$message.success(res.message);
+                that.$emit('ok');
+              }else{
+                that.$message.warning(res.message);
+              }
+            }).finally(() => {
+              that.confirmLoading = false;
+              that.close();
+            })
+
+
+
+          }
+        })
+      },
+      handleCancel () {
+        this.close()
+      },
+
+
+    }
+  }
+</script>
+
+<style lang="less" scoped>
+/** Button按钮间距 */
+  .ant-btn {
+    margin-left: 30px;
+    margin-bottom: 30px;
+    float: right;
+  }
+</style>
