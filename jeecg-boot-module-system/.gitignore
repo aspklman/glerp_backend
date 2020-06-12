@@ -1,3 +1,7 @@
 /target/
 
 /src/main/resources/application-dev.yml
+
+/src/main/resources/jeecg/jeecg_config.properties
+
+/src/main/resources/jeecg/jeecg_database.properties
