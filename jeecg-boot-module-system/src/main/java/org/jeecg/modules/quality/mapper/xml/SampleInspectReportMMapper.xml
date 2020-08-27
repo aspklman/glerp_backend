@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.quality.mapper.SampleInspectReportMMapper">
+
+    <select id="getSampleQty" parameterType="java.lang.String" resultType="HashMap">
+        SELECT AQL标准双数 "sampleQtyAqlTtl",
+               功能性检测双数 "funcQtyAqlTtl",
+               结构性检测双数 "strQtyAql"
+          FROM v_sample_inspect_std_m
+         WHERE fact_no = #{factNo} AND 客户订单 = #{custOdrNo}
+    </select>
+
+    <select id="getDefectQty" parameterType="java.lang.String" resultType="HashMap">
+        SELECT type "type",
+               minor "minor",
+               major "major",
+               critical "critical"
+          FROM v_sample_inspect_rpt_def_qty
+         WHERE fact_no = #{factNo} AND cust_odr_no = #{custOdrNo} AND item_main_no = #{itemMainNo}
+    </select>
+
+    <select id="getCheckPoints" parameterType="java.lang.String" resultType="HashMap">
+          SELECT item_main_no "itemMainNo",
+                 item_medium_no "itemMediumNo",
+                 check_points_no "checkPointsNo",
+                 check_points_cn "checkPointsCn",
+                 test_method_reqs_cn "testMethodReqsCn",
+                 minor "minor",
+                 major "major",
+                 critical "critical"
+            FROM v_sample_inspect_rpt_chk_pts
+           WHERE     fact_no = #{factNo}
+                 AND cust_odr_no = #{custOdrNo}
+                 AND version_no = #{versionNo}
+                 AND style_shorten = #{styleShorten}
+                 AND item_main_no = #{itemMainNo}
+                 AND item_medium_no = #{itemMediumNo}
+        ORDER BY check_points_no
+    </select>
+
+    <update id="addMinor" parameterType="java.lang.String">
+        UPDATE sample_inspect_report_d
+        <choose>
+            <when test=" minorField != null and minorField != '' ">
+                SET minor = minor + 1
+            </when>
+            <when test=" majorField != null and majorField != '' ">
+                SET major = major + 1
+            </when>
+            <when test=" criticalField != null and criticalField != '' ">
+                SET critical = critical + 1
+            </when>
+        </choose>
+        WHERE   fact_no = #{factNo}
+            AND cust_odr_no = #{custOdrNo}
+            AND version_no = #{versionNo}
+            AND style_shorten = #{styleShorten}
+            AND item_main_no = #{itemMainNo}
+            AND item_medium_no = #{itemMediumNo}
+            AND check_points_no = #{checkPointsNo}
+    </update>
+
+    <update id="subtractMinor" parameterType="java.lang.String">
+        UPDATE sample_inspect_report_d
+        <choose>
+            <when test=" minorField != null and minorField != '' ">
+                SET minor = minor - 1
+            </when>
+            <when test=" majorField != null and majorField != '' ">
+                SET major = major - 1
+            </when>
+            <when test=" criticalField != null and criticalField != '' ">
+                SET critical = critical - 1
+            </when>
+        </choose>
+        WHERE   fact_no = #{factNo}
+            AND cust_odr_no = #{custOdrNo}
+            AND version_no = #{versionNo}
+            AND style_shorten = #{styleShorten}
+            AND item_main_no = #{itemMainNo}
+            AND item_medium_no = #{itemMediumNo}
+            AND check_points_no = #{checkPointsNo}
+    </update>
+
+    <update id="updateInspectorDecision" parameterType="java.lang.String">
+          UPDATE sample_inspect_report_m
+             SET inspector_decision = #{inspectorDecision}
+           WHERE fact_no = #{factNo}
+             AND cust_odr_no = #{custOdrNo}
+             AND version_no = #{versionNo}
+             AND style_shorten = #{styleShorten}
+    </update>
+
+    <select id="queryCustOdrNo" parameterType="java.lang.String" resultType="Integer">
+        SELECT COUNT (*) "qty"
+          FROM odrm
+         WHERE fact_no = #{factNo} AND cust_odr_no = #{custOdrNo}
+    </select>
+
+    <insert id="insertReportM" parameterType="java.lang.String">
+        INSERT INTO sample_inspect_report_m (fact_no,
+                                             cust_odr_no,
+                                             version_no,
+                                             style_shorten,
+                                             pace_code,
+                                             model_colour,
+                                             order_type,
+                                             odr_qty,
+                                             inspect_date,
+                                             inspector_decision,
+                                             id,
+                                             create_by,
+                                             create_time)
+           SELECT a.fact_no,
+                  a.cust_odr_no,
+                  #{versionNo},
+                  b.style_shorten,
+                  #{paceCode},
+                  #{modelColour},
+                  #{orderType},
+                  a.cus_qty,
+                  CURRENT_TIMESTAMP,
+                  NULL,
+                  NVL ( (SELECT MAX (TO_NUMBER (id)) FROM sample_inspect_report_m), 0) + 1,
+                  #{createBy},
+                  CURRENT_TIMESTAMP
+             FROM odrm a, stylem b
+            WHERE     a.fact_no = b.fact_no
+                  AND a.style_no = b.style_no
+                  AND a.fact_no = #{factNo}
+                  AND a.cust_odr_no = #{custOdrNo}
+
+    </insert>
+
+    <insert id="insertReportD" parameterType="java.lang.String">
+        INSERT INTO sample_inspect_report_d (fact_no,
+                                     cust_odr_no,
+                                     version_no,
+                                     style_shorten,
+                                     item_main_no,
+                                     item_medium_no,
+                                     check_points_no,
+                                     minor,
+                                     major,
+                                     critical,
+                                     minor_enable,
+                                     major_enable,
+                                     critical_enable,
+                                     id,
+                                     main_id,
+                                     create_by,
+                                     create_time)
+           SELECT a.fact_no,
+                  a.cust_odr_no,
+                  a.version_no,
+                  a.style_shorten,
+                  b.item_main_no,
+                  b.item_medium_no,
+                  b.check_points_no,
+                  0,
+                  0,
+                  0,
+                  c.minor_enable,
+                  c.major_enable,
+                  c.critical_enable,
+                  NVL ((SELECT MAX (TO_NUMBER (id)) FROM sample_inspect_report_d) ,0) + ROWNUM,
+                  (SELECT MAX (TO_NUMBER (id)) FROM sample_inspect_report_m),
+                  a.create_by,
+                  a.create_time
+             FROM sample_inspect_report_m a, sample_inspect_style b, sample_inspect_item c
+            WHERE     a.fact_no = b.fact_no
+                  AND a.style_shorten = b.style_shorten
+                  AND b.fact_no = c.fact_no
+                  AND b.item_main_no = c.item_main_no
+                  AND b.item_medium_no = c.item_medium_no
+                  AND b.check_points_no = c.check_points_no
+                  AND a.fact_no = #{factNo}
+                  AND a.cust_odr_no = #{custOdrNo}
+                  AND a.version_no = #{versionNo}
+    </insert>
+
+
+
+
+</mapper>

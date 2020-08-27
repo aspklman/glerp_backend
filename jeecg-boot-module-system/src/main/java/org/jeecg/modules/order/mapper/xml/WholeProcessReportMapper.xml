@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.order.mapper.WholeProcessReportMapper">
+
+    <select id="getSizeQty" parameterType="java.lang.String" resultType="HashMap">
+        SELECT size_no "size_no", odr_qty "odr_qty"
+        FROM v_whole_process_size
+        WHERE fact_no = #{factNo} AND TRIM (fact_odr_no_in) = #{factOdrNo}
+        ORDER BY size_no
+    </select>
+
+    <select id="getStockData" parameterType="java.lang.String" resultType="HashMap">
+        SELECT owe_qty "owe_qty", in_date "in_date", shp_status "shp_status"
+        FROM v_whole_process_wh
+        WHERE fact_no = #{factNo} AND TRIM (fact_odr_no) = #{factOdrNo}
+    </select>
+
+</mapper>

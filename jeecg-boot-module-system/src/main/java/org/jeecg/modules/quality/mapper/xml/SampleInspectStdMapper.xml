@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.order.mapper.SampleInspectStdMapper">
+
+    <select id="getInspectDetail" parameterType="java.lang.String" resultType="HashMap">
+        SELECT size_no "size_no",
+               cus_qty "cus_qty",
+               ctn_qty "ctn_qty",
+               ctn_qty_aql "ctn_qty_aql",
+               sample_qty_aql "sample_qty_aql",
+               func_qty_aql "func_qty_aql",
+               str_qty_aql "str_qty_aql"
+          FROM v_sample_inspect_std
+        WHERE fact_no = #{factNo} AND TRIM (fact_odr_no) = #{factOdrNo}
+    </select>
+
+</mapper>

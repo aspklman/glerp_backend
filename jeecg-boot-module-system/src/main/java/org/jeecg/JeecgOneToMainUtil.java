@@ -22,26 +22,26 @@ public class JeecgOneToMainUtil {
 	public static void main(String[] args) {
 		//第一步：设置主表配置
 		MainTableVo mainTable = new MainTableVo();
-		mainTable.setTableName("odrm");//表名
-		mainTable.setEntityName("Odrm");	 //实体名
-		mainTable.setEntityPackage("order");	 //包名
-		mainTable.setFtlDescription("订单主表");	 //描述
+		mainTable.setTableName("sample_inspect_report_m");//表名
+		mainTable.setEntityName("SampleInspectReportM");	 //实体名
+		mainTable.setEntityPackage("quality");	 //包名
+		mainTable.setFtlDescription("验货报告主表");	 //描述
 		
 		//第二步：设置子表集合配置
 		List<SubTableVo> subTables = new ArrayList<SubTableVo>();
 		//[1].子表一
 		SubTableVo po = new SubTableVo();
-		po.setTableName("odrd");//表名
-		po.setEntityName("Odrd");	    //实体名
-		po.setEntityPackage("order");	        //包名
-		po.setFtlDescription("订单子表");       //描述
+		po.setTableName("sample_inspect_report_d");//表名
+		po.setEntityName("SampleInspectReportD");	    //实体名
+		po.setEntityPackage("quality");	        //包名
+		po.setFtlDescription("验货报告子表");       //描述
 		//子表外键参数配置
 		/*说明: 
 		 * a) 子表引用主表主键ID作为外键，外键字段必须以_ID结尾;
 		 * b) 主表和子表的外键字段名字，必须相同（除主键ID外）;
 		 * c) 多个外键字段，采用逗号分隔;
 		*/
-		po.setForeignKeys(new String[]{"order_id"});      //注意：一对多之子表，需另外增加此字段
+		po.setForeignKeys(new String[]{"main_id"});      //注意：一对多之子表，需另外增加此字段
 		subTables.add(po);
 //		//[2].子表二
 //		SubTableVo po2 = new SubTableVo();
