@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -99,8 +100,8 @@ public class SampleInspectReportMController {
 		 } else {
 			 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 			 String factNo = loginUser.getFactNo();
-			 String custOdrNo = pssr.trim().toString();
-			 Map<String, Object> sampleQty = this.sampleInspectReportMService.getSampleQty(factNo, custOdrNo);
+			 String factOdrNo = pssr.trim();
+			 Map<String, Object> sampleQty = this.sampleInspectReportMService.getSampleQty(factNo, factOdrNo);
 			 result.setResult(sampleQty);
 			 result.success("获取成功!");
 		 }
@@ -125,10 +126,11 @@ public class SampleInspectReportMController {
 			 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 			 String factNo = loginUser.getFactNo();
 			 String[] p = pssr.split(",");
-			 String custOdrNo = p[0];
+			 String factOdrNo = p[0];
 			 String itemMainNo = p[1];
-			 log.info("参数：" + factNo + '/' + custOdrNo + '/' + itemMainNo);
-			 List<Map<String, Object>> defectQty = this.sampleInspectReportMService.getDefectQty(factNo, custOdrNo, itemMainNo);
+			 String versionNo = p[2];
+			 log.info("参数：" + factNo + '/' + factOdrNo + '/' + itemMainNo + '/' + versionNo);
+			 List<Map<String, Object>> defectQty = this.sampleInspectReportMService.getDefectQty(factNo, factOdrNo, itemMainNo, versionNo);
 			 result.setResult(defectQty);
 			 result.success("获取成功!");
 		 }
@@ -316,25 +318,43 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-新增-插入主档")
 	 @ApiOperation(value = "验货报告主表-新增-插入主档", notes = "验货报告主表-新增-插入主档")
 	 @GetMapping(value = "/insertReportM")
-	 public void insertReportM(@RequestParam("pssr") String pssr) {
+	 public Result<?> insertReportM(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
-		 if (pssr == null) {
-			 result.error500("参数不识别！");
-		 } else {
+//		 if (paramReportM == null) {
+//			 result.error500("参数不识别！");
+//		 } else {
 			 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 			 String factNo = loginUser.getFactNo();
+//			 String custOdrNo = sampleInspectReportM.custOdrNo;
+//			 String versionNo = paramReportM.versionNo;
+//			 String paceCode = paramReportM.paceCode;
+//			 String modelColour = paramReportM.modelColour;
+//			 String orderType = paramReportM.orderType;
 			 String[] p = pssr.split(",");
 			 String custOdrNo = p[0];
 			 String versionNo = p[1];
-			 String paceCode = p[2];
-			 String modelColour = p[3];
+//			 String paceCode = p[2];
+//			 String modelColour = p[3];
 			 String orderType = p[4];
+
+//			 String custOdrNo = (String) object.get("custOdrNo");
+//			 String versionNo = (String) object.get("versionNo");
+//			 String paceCode = (String) object.get("paceCode");
+//			 String modelColour = (String) object.get("modelColour");
+//			 String orderType = (String) object.get("orderType");
 			 String createBy = loginUser.getUsername();
-			 log.info("插入主档：" + factNo + "/" + custOdrNo + "/" + versionNo + "/" +paceCode + "/" + modelColour + "/" + orderType + "/" + createBy);
-			 this.sampleInspectReportMService.insertReportM(factNo, custOdrNo, versionNo, paceCode, modelColour, orderType, createBy);
+//			 log.info("插入主档：" + factNo + "/" + custOdrNo + "/" + versionNo + "/" +paceCode + "/" + modelColour + "/" + orderType + "/" + createBy);
+			 log.info("插入主档：" + factNo + "/" + custOdrNo + "/" + versionNo + "/" + orderType + "/" + createBy);
+//			 this.sampleInspectReportMService.insertReportM(factNo, custOdrNo, versionNo, paceCode, modelColour, orderType, createBy);
+		try {
+			this.sampleInspectReportMService.insertReportM(factNo, custOdrNo, versionNo, orderType, createBy);
+		} catch(Exception e) {
+			return result.error500("新增失败！" + e.getMessage());
+		}
+
 //			 result.setResult(qty);
-			 result.success("新增成功!");
-		 }
+			 return result.ok("新增成功!");
+//		 }
 //         log.info("结果：" + result);
 //         return result;
 	 }
@@ -348,21 +368,105 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-新增-插入子档")
 	 @ApiOperation(value = "验货报告主表-新增-插入子档", notes = "验货报告主表-新增-插入子档")
 	 @GetMapping(value = "/insertReportD")
-	 public void insertReportD(@RequestParam("pssr") String pssr) {
+	 public Result<?> insertReportD(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
-		 if (pssr == null) {
-			 result.error500("参数不识别！");
-		 } else {
+//		 if (pssr == null) {
+//			 result.error500("参数不识别！");
+//		 } else {
+			LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+			String factNo = loginUser.getFactNo();
+			String[] p = pssr.split(",");
+			String custOdrNo = p[0];
+			String versionNo = p[1];
+		    String createBy = loginUser.getUsername();
+			log.info("插入子档：" + factNo + "/" + custOdrNo + "/" + versionNo + "/" + createBy);
+			try {
+				this.sampleInspectReportMService.insertReportD(factNo, custOdrNo, versionNo, createBy);
+			} catch (Exception e) {
+				return result.error500("新增失败！");
+			}
+
+			return result.ok("新增成功！");
+//		 }
+	 }
+
+	 /**
+	  * 提交问题
+	  *
+	  * @param pssr
+	  * @return
+	  */
+	 @AutoLog(value = "验货报告主表-提交问题")
+	 @ApiOperation(value = "验货报告主表-提交问题", notes = "验货报告主表-提交问题")
+	 @GetMapping(value = "/addQuestion")
+	 public Result<?> addQuestion(@RequestParam("pssr") String pssr) {
+		 Result result = new Result();
+//		 if (pssr == null) {
+//			 result.error500("参数不识别！");
+//		 } else {
+			 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+			 String factNo = loginUser.getFactNo();
+			 String[] p = pssr.split(",");
+//			 String minorField = "";
+//			 String majorField = "";
+//			 String criticalField = "";
+			 String custOdrNo = p[0];
+			 String versionNo = p[1];
+			 String styleShorten = p[2];
+			 String itemMainNo = p[3];
+			 String itemMediumNo = p[4];
+			 String checkPointsNo = p[5];
+			 String findQuestion = p[6];
+//			 if (updateField.equals("minor")) {
+//				 minorField = "minor";
+//			 } else if (updateField.equals("major")) {
+//				 majorField = "major";
+//			 } else if (updateField.equals("critical")) {
+//				 criticalField = "critical";
+//			 }
+			 log.info("参数8：" + factNo + "/" + custOdrNo + "/" +  versionNo + "/" +  styleShorten + "/" +  itemMainNo + "/" +  itemMediumNo + "/" +  checkPointsNo + "/" +  findQuestion);
+			 try {
+				 this.sampleInspectReportMService.addQuestion(factNo, custOdrNo, versionNo, styleShorten, itemMainNo, itemMediumNo, checkPointsNo, findQuestion);
+			 } catch (Exception e) {
+			 	return result.error500("提交失败！");
+			 }
+			 return result.ok("提交成功！");
+//		 }
+//         log.info("结果：" + result);
+//         return result;
+	 }
+
+	 /**
+	  * 删除问题
+	  *
+	  * @param pssr
+	  * @return
+	  */
+	 @AutoLog(value = "验货报告主表-删除问题")
+	 @ApiOperation(value = "验货报告主表-删除问题", notes = "验货报告主表-删除问题")
+	 @GetMapping(value = "/subtractQuestion")
+	 public Result<?> subtractQuestion(@RequestParam("pssr") String pssr) {
+		 Result result = new Result();
+//		 if (pssr == null) {
+//			 result.error500("参数不识别！");
+//		 } else {
 			 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 			 String factNo = loginUser.getFactNo();
 			 String[] p = pssr.split(",");
 			 String custOdrNo = p[0];
 			 String versionNo = p[1];
-			 log.info("插入子档：" + factNo + "/" + custOdrNo + "/" + versionNo);
-			 this.sampleInspectReportMService.insertReportD(factNo, custOdrNo, versionNo);
-//			 result.setResult(qty);
-			 result.success("新增成功!");
-		 }
+			 String styleShorten = p[2];
+			 String itemMainNo = p[3];
+			 String itemMediumNo = p[4];
+			 String checkPointsNo = p[5];
+			 log.info("参数7：" + factNo + "/" + custOdrNo + "/" +  versionNo + "/" +  styleShorten + "/" +  itemMainNo + "/" +  itemMediumNo + "/" +  checkPointsNo);
+			 try {
+				 this.sampleInspectReportMService.subtractQuestion(factNo, custOdrNo, versionNo, styleShorten, itemMainNo, itemMediumNo, checkPointsNo);
+			 } catch (Exception e) {
+			 	return result.error500("删除失败！");
+			 }
+			 return result.success("删除成功！");
+//		 }
 //         log.info("结果：" + result);
 //         return result;
 	 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.finance.mapper.VCreditorsRightsDetailMapper">
+
+    <update id="updateSettleOrg" parameterType="java.lang.String">
+          UPDATE t_analysis_end_date
+             SET settle_org = #{settleOrg}
+    </update>
+
+    <update id="updateAnalysisEndDate" parameterType="java.lang.String">
+          UPDATE t_analysis_end_date
+             SET analysis_end_date = #{analysisEndDate}
+    </update>
+
+</mapper>

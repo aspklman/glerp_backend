@@ -10,9 +10,21 @@
     </select>
 
     <select id="getStockData" parameterType="java.lang.String" resultType="HashMap">
-        SELECT owe_qty "owe_qty", in_date "in_date", shp_status "shp_status"
+        SELECT TO_CHAR (owe_qty) "owe_qty", in_date "in_date", shp_status "shp_status"
         FROM v_whole_process_wh
         WHERE fact_no = #{factNo} AND TRIM (fact_odr_no) = #{factOdrNo}
+    </select>
+
+    <select id="getInspectReport" parameterType="java.lang.String" resultType="HashMap">
+        SELECT inspector_decision "inspector_decision",
+               TO_CHAR (version_no - 1) "rework_count"
+          FROM sample_inspect_report_m
+         WHERE     fact_no = #{factNo}
+               AND cust_odr_no = #{custOdrNo}
+               AND version_no =
+                      (SELECT MAX (version_no)
+                         FROM sample_inspect_report_m
+                        WHERE fact_no = #{factNo} AND cust_odr_no = #{custOdrNo})
     </select>
 
 </mapper>

@@ -18,4 +18,6 @@ public interface IWholeProcessReportService extends IService<WholeProcessReport>
 
     public Map<String, Object> getStockData(String factNo, String factOdrNo);
 
+    public Map<String, Object> getInspectReport(String factNo, String custOdrNo);
+
 }

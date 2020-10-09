@@ -71,6 +71,7 @@ public class WholeProcessReportController {
 									  HttpServletRequest req) {
 		Result<IPage<WholeProcessReport>> result = new Result<IPage<WholeProcessReport>>();
 		QueryWrapper<WholeProcessReport> queryWrapper = QueryGenerator.initQueryWrapper(wholeProcessReport, req.getParameterMap());
+		queryWrapper.orderByDesc("订单交期");
 		Page<WholeProcessReport> page = new Page<WholeProcessReport>(pageNo, pageSize);
 		IPage<WholeProcessReport> pageList = wholeProcessReportService.page(page, queryWrapper);
 		result.setSuccess(true);
@@ -125,6 +126,33 @@ public class WholeProcessReportController {
 			 String factOdrNo = pssr.trim().toString();
 //			 log.info("工厂订单：" + factOdrNo + '/');
 			 Map<String, Object> stockData = this.wholeProcessReportService.getStockData(factNo, factOdrNo);
+			 result.setResult(stockData);
+			 result.success("获取成功!");
+		 }
+		 log.info("结果：" + result);
+		 return result;
+	 }
+
+	 /**
+	  * 验货报告查询
+	  *
+	  * @param pssr
+	  * @return
+	  */
+	 @AutoLog(value = "全流程报表-验货报告查询")
+	 @ApiOperation(value = "全流程报表-验货报告查询", notes = "全流程报表-验货报告查询")
+	 @GetMapping(value = "/getInspectReport")
+	 public Result<Map<String, Object>> getInspectReport(@RequestParam("pssr") String pssr) {
+		 Result<Map<String, Object>> result = new Result<Map<String, Object>>();
+		 if (pssr == null) {
+			 result.error500("参数不识别！");
+		 } else {
+			 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+			 String factNo = loginUser.getFactNo();
+//			 log.info("厂别：" + factNo);
+			 String custOdrNo = pssr.trim().toString();
+//			 log.info("工厂订单：" + custOdrNo + '/');
+			 Map<String, Object> stockData = this.wholeProcessReportService.getInspectReport(factNo, custOdrNo);
 			 result.setResult(stockData);
 			 result.success("获取成功!");
 		 }

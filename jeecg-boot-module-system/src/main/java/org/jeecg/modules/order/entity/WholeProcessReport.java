@@ -84,6 +84,14 @@ public class WholeProcessReport {
 	@Excel(name = "订单数", width = 15)
     @ApiModelProperty(value = "订单数")
 	private java.lang.Integer 订单数;
+	/**满箱标注*/
+	@Excel(name = "finishMark", width = 15)
+	@ApiModelProperty(value = "finishMark")
+	private java.lang.String finishMark;
+	/**验货结果*/
+	@Excel(name = "inspectorDecision", width = 15)
+	@ApiModelProperty(value = "inspectorDecision")
+	private java.lang.String inspectorDecision;
 	/**id*/
 	@TableId(type = IdType.UUID)
     @ApiModelProperty(value = "id")

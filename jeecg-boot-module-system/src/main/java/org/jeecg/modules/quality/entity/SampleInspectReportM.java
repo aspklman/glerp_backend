@@ -23,10 +23,12 @@ public class SampleInspectReportM implements Serializable {
     
 	/**厂区编号*/
 	private java.lang.String factNo;
+	/**工厂订单编号*/
+	private java.lang.String factOdrNo;
 	/**客户订单编号*/
 	private java.lang.String custOdrNo;
 	/**版本编号*/
-	private java.lang.Integer versionNo;
+	private java.lang.String versionNo;
 	/**型体编号*/
 	private java.lang.String styleShorten;
 	/**Pace编码*/

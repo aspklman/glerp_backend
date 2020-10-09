@@ -3,11 +3,11 @@
 <mapper namespace="org.jeecg.modules.quality.mapper.SampleInspectReportMMapper">
 
     <select id="getSampleQty" parameterType="java.lang.String" resultType="HashMap">
-        SELECT AQL标准双数 "sampleQtyAqlTtl",
-               功能性检测双数 "funcQtyAqlTtl",
-               结构性检测双数 "strQtyAql"
+        SELECT TO_CHAR (AQL标准双数) "sampleQtyAqlTtl",
+               TO_CHAR (功能性检测双数) "funcQtyAqlTtl",
+               TO_CHAR (结构性检测双数) "strQtyAql"
           FROM v_sample_inspect_std_m
-         WHERE fact_no = #{factNo} AND 客户订单 = #{custOdrNo}
+         WHERE fact_no = #{factNo} AND TRIM (工厂订单) = #{factOdrNo}
     </select>
 
     <select id="getDefectQty" parameterType="java.lang.String" resultType="HashMap">
@@ -16,7 +16,10 @@
                major "major",
                critical "critical"
           FROM v_sample_inspect_rpt_def_qty
-         WHERE fact_no = #{factNo} AND cust_odr_no = #{custOdrNo} AND item_main_no = #{itemMainNo}
+         WHERE fact_no = #{factNo}
+           AND TRIM (fact_odr_no) = #{factOdrNo}
+           AND item_main_no = #{itemMainNo}
+           AND (TRIM (version_no) = #{versionNo} OR version_no IS NULL)
     </select>
 
     <select id="getCheckPoints" parameterType="java.lang.String" resultType="HashMap">
@@ -24,10 +27,16 @@
                  item_medium_no "itemMediumNo",
                  check_points_no "checkPointsNo",
                  check_points_cn "checkPointsCn",
+                 check_points_en "checkPointsEn",
                  test_method_reqs_cn "testMethodReqsCn",
+                 test_method_reqs_en "testMethodReqsEn",
+                 find_question "findQuestion",
                  minor "minor",
                  major "major",
-                 critical "critical"
+                 critical "critical",
+                 minor_enable "minorEnable",
+                 major_enable "majorEnable",
+                 critical_enable "criticalEnable"
             FROM v_sample_inspect_rpt_chk_pts
            WHERE     fact_no = #{factNo}
                  AND cust_odr_no = #{custOdrNo}
@@ -99,6 +108,7 @@
 
     <insert id="insertReportM" parameterType="java.lang.String">
         INSERT INTO sample_inspect_report_m (fact_no,
+                                             fact_odr_no,
                                              cust_odr_no,
                                              version_no,
                                              style_shorten,
@@ -112,11 +122,12 @@
                                              create_by,
                                              create_time)
            SELECT a.fact_no,
+                  a.fact_odr_no,
                   a.cust_odr_no,
                   #{versionNo},
                   b.style_shorten,
-                  #{paceCode},
-                  #{modelColour},
+                  b.artic_no,
+                  b.artic_nm,
                   #{orderType},
                   a.cus_qty,
                   CURRENT_TIMESTAMP,
@@ -134,51 +145,86 @@
 
     <insert id="insertReportD" parameterType="java.lang.String">
         INSERT INTO sample_inspect_report_d (fact_no,
-                                     cust_odr_no,
-                                     version_no,
-                                     style_shorten,
-                                     item_main_no,
-                                     item_medium_no,
-                                     check_points_no,
-                                     minor,
-                                     major,
-                                     critical,
-                                     minor_enable,
-                                     major_enable,
-                                     critical_enable,
-                                     id,
-                                     main_id,
-                                     create_by,
-                                     create_time)
-           SELECT a.fact_no,
-                  a.cust_odr_no,
-                  a.version_no,
-                  a.style_shorten,
-                  b.item_main_no,
-                  b.item_medium_no,
-                  b.check_points_no,
-                  0,
-                  0,
-                  0,
-                  c.minor_enable,
-                  c.major_enable,
-                  c.critical_enable,
-                  NVL ((SELECT MAX (TO_NUMBER (id)) FROM sample_inspect_report_d) ,0) + ROWNUM,
-                  (SELECT MAX (TO_NUMBER (id)) FROM sample_inspect_report_m),
-                  a.create_by,
-                  a.create_time
-             FROM sample_inspect_report_m a, sample_inspect_style b, sample_inspect_item c
-            WHERE     a.fact_no = b.fact_no
-                  AND a.style_shorten = b.style_shorten
-                  AND b.fact_no = c.fact_no
-                  AND b.item_main_no = c.item_main_no
-                  AND b.item_medium_no = c.item_medium_no
-                  AND b.check_points_no = c.check_points_no
-                  AND a.fact_no = #{factNo}
-                  AND a.cust_odr_no = #{custOdrNo}
-                  AND a.version_no = #{versionNo}
+                                             fact_odr_no,
+                                             cust_odr_no,
+                                             version_no,
+                                             style_shorten,
+                                             item_main_no,
+                                             item_medium_no,
+                                             check_points_no,
+                                             minor,
+                                             major,
+                                             critical,
+                                             minor_enable,
+                                             major_enable,
+                                             critical_enable,
+                                             id,
+                                             main_id,
+                                             create_by,
+                                             create_time)
+
+           SELECT a1.fact_no,
+                   a1.fact_odr_no,
+                   a1.cust_odr_no,
+                   #{versionNo},
+                   a2.style_shorten,
+                   b.item_main_no,
+                   b.item_medium_no,
+                   b.check_points_no,
+                   0,
+                   0,
+                   0,
+                   c.minor_enable,
+                   c.major_enable,
+                   c.critical_enable,
+                     NVL ( (SELECT MAX (TO_NUMBER (id)) FROM sample_inspect_report_d), 0)
+                   + ROWNUM,
+                   (SELECT   NVL ( (SELECT MAX (TO_NUMBER (main_id))
+                                      FROM sample_inspect_report_d),
+                                  0)
+                           + 1
+                      FROM DUAL),
+                   #{createBy},
+                   CURRENT_TIMESTAMP
+              FROM odrm a1,
+                   stylem a2,
+                   sample_inspect_style b,
+                   sample_inspect_item c
+             WHERE     a1.fact_no = a2.fact_no
+                   AND a1.style_no = a2.style_no
+                   AND a1.fact_no = b.fact_no
+                   AND a2.style_shorten = b.style_shorten
+                   AND b.fact_no = c.fact_no
+                   AND b.item_main_no = c.item_main_no
+                   AND b.item_medium_no = c.item_medium_no
+                   AND b.check_points_no = c.check_points_no
+                   AND a1.fact_no = #{factNo}
+                   AND a1.cust_odr_no = #{custOdrNo}
     </insert>
 
+    <update id="addQuestion" parameterType="java.lang.String">
+        UPDATE sample_inspect_report_d
+           SET find_question = #{findQuestion}
+         WHERE     fact_no = #{factNo}
+               AND cust_odr_no = #{custOdrNo}
+               AND version_no = #{versionNo}
+               AND style_shorten = #{styleShorten}
+               AND item_main_no = #{itemMainNo}
+               AND item_medium_no = #{itemMediumNo}
+               AND check_points_no = #{checkPointsNo}
+    </update>
+
+    <update id="subtractQuestion" parameterType="java.lang.String">
+        UPDATE sample_inspect_report_d
+           SET find_question = NULL
+         WHERE     fact_no = #{factNo}
+               AND cust_odr_no = #{custOdrNo}
+               AND version_no = #{versionNo}
+               AND style_shorten = #{styleShorten}
+               AND item_main_no = #{itemMainNo}
+               AND item_medium_no = #{itemMediumNo}
+               AND check_points_no = #{checkPointsNo}
+    </update>
 
 
 

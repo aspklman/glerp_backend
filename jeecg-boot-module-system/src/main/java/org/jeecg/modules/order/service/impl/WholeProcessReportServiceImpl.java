@@ -33,4 +33,9 @@ public class WholeProcessReportServiceImpl extends ServiceImpl<WholeProcessRepor
         return wholeProcessReportMapper.getStockData(factNo, factOdrNo);
     }
 
+    @Override
+    public Map<String, Object> getInspectReport(String factNo, String custOdrNo) {
+        return wholeProcessReportMapper.getInspectReport(factNo, custOdrNo);
+    }
+
 }

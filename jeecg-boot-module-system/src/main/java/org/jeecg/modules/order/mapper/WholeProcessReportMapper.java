@@ -19,4 +19,6 @@ public interface WholeProcessReportMapper extends BaseMapper<WholeProcessReport>
 
     public Map<String, Object> getStockData(String factNo, String factOdrNo);
 
+    public Map<String, Object> getInspectReport(String factNo, String custOdrNo);
+
 }

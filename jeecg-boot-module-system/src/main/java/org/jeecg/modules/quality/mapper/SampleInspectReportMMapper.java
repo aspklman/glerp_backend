@@ -15,9 +15,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SampleInspectReportMMapper extends BaseMapper<SampleInspectReportM> {
 
-    public Map<String, Object> getSampleQty(String factNo, String custOdrNo);
+    public Map<String, Object> getSampleQty(String factNo, String factOdrNo);
 
-    public List<Map<String, Object>> getDefectQty(String factNo, String custOdrNo, String itemMainNo);
+    public List<Map<String, Object>> getDefectQty(String factNo, String factOdrNo, String itemMainNo, String versionNo);
 
     public List<Map<String, Object>> getCheckPoints(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo);
 
@@ -29,8 +29,16 @@ public interface SampleInspectReportMMapper extends BaseMapper<SampleInspectRepo
 
     public Integer queryCustOdrNo(String factNo, String custOdrNo);
 
-    public void insertReportM(String factNo, String custOdrNo, String versionNo, String paceCode, String modelColour, String orderType, String createBy);
+//    public void insertReportM(@Param("factNo") String factNo, @Param("custOdrNo") String custOdrNo, @Param("versionNo") Integer versionNo, @Param("paceCode") String paceCode, @Param("modelColour") String modelColour, @Param("orderType") String orderType, @Param("createBy") String createBy);
+//    public void insertReportM(String factNo, String custOdrNo, String versionNo, String paceCode, String modelColour, String orderType, String createBy);
+    public void insertReportM(String factNo, String custOdrNo, String versionNo, String orderType, String createBy);
 
-    public void insertReportD(String factNo, String custOdrNo, String versionNo);
+//    public void insertReportD(@Param("factNo")String factNo, @Param("custOdrNo") String custOdrNo, @Param("versionNo") Integer versionNo);
+    public void insertReportD(String factNo, String custOdrNo, String versionNo, String createBy);
+
+    public void addQuestion(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo, String checkPointsNo, String findQuestion);
+
+    public void subtractQuestion(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo, String checkPointsNo);
+
 
 }

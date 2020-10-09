@@ -29,13 +29,13 @@ public class SampleInspectReportMServiceImpl extends ServiceImpl<SampleInspectRe
 	private SampleInspectReportDMapper sampleInspectReportDMapper;
 
 	@Override
-	public Map<String, Object> getSampleQty(String factNo, String custOdrNo) {
-		return sampleInspectReportMMapper.getSampleQty(factNo, custOdrNo);
+	public Map<String, Object> getSampleQty(String factNo, String factOdrNo) {
+		return sampleInspectReportMMapper.getSampleQty(factNo, factOdrNo);
 	}
 
 	@Override
-	public List<Map<String, Object>> getDefectQty(String factNo, String custOdrNo, String itemMainNo) {
-		return sampleInspectReportMMapper.getDefectQty(factNo, custOdrNo, itemMainNo);
+	public List<Map<String, Object>> getDefectQty(String factNo, String factOdrNo, String itemMainNo, String versionNo) {
+		return sampleInspectReportMMapper.getDefectQty(factNo, factOdrNo, itemMainNo, versionNo);
 	}
 
 	@Override
@@ -64,13 +64,24 @@ public class SampleInspectReportMServiceImpl extends ServiceImpl<SampleInspectRe
 	}
 
 	@Override
-	public void insertReportM(String factNo, String custOdrNo, String versionNo, String paceCode, String modelColour, String orderType, String createBy) {
-		sampleInspectReportMMapper.insertReportM(factNo, custOdrNo, versionNo, paceCode, modelColour, orderType, createBy);
+	public void insertReportM(String factNo, String custOdrNo, String versionNo, String orderType, String createBy) {
+//		sampleInspectReportMMapper.insertReportM(factNo, custOdrNo, versionNo, paceCode, modelColour, orderType, createBy);
+		sampleInspectReportMMapper.insertReportM(factNo, custOdrNo, versionNo, orderType, createBy);
 	}
 
 	@Override
-	public void insertReportD(String factNo, String custOdrNo, String versionNo) {
-		sampleInspectReportMMapper.insertReportD(factNo, custOdrNo, versionNo);
+	public void insertReportD(String factNo, String custOdrNo, String versionNo, String createBy) {
+		sampleInspectReportMMapper.insertReportD(factNo, custOdrNo, versionNo, createBy);
+	}
+
+	@Override
+	public void addQuestion(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo, String checkPointsNo, String findQuestion) {
+		sampleInspectReportMMapper.addQuestion(factNo, custOdrNo, versionNo, styleShorten, itemMainNo, itemMediumNo, checkPointsNo, findQuestion);
+	}
+
+	@Override
+	public void subtractQuestion(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo, String checkPointsNo) {
+		sampleInspectReportMMapper.subtractQuestion(factNo, custOdrNo, versionNo, styleShorten, itemMainNo, itemMediumNo, checkPointsNo);
 	}
 	
 	@Override

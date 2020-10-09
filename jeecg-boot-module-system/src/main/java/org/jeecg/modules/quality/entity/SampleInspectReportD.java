@@ -24,12 +24,14 @@ public class SampleInspectReportD implements Serializable {
 	/**厂区编号*/
     @Excel(name = "厂区编号", width = 15)
 	private java.lang.String factNo;
+	/**工厂订单编号*/
+	private java.lang.String factOdrNo;
 	/**客户订单编号*/
     @Excel(name = "客户订单编号", width = 15)
 	private java.lang.String custOdrNo;
 	/**版本编号*/
     @Excel(name = "版本编号", width = 15)
-	private java.lang.Integer versionNo;
+	private java.lang.String versionNo;
 	/**型体编号*/
     @Excel(name = "型体编号", width = 15)
 	private java.lang.String styleShorten;

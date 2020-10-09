@@ -16,9 +16,9 @@ import java.util.Map;
  */
 public interface ISampleInspectReportMService extends IService<SampleInspectReportM> {
 
-	public Map<String, Object> getSampleQty(String factNo, String custOdrNo);
+	public Map<String, Object> getSampleQty(String factNo, String factOdrNo);
 
-	public List<Map<String, Object>> getDefectQty(String factNo, String custOdrNo, String itemMainNo);
+	public List<Map<String, Object>> getDefectQty(String factNo, String factOdrNo, String itemMainNo, String versionNo);
 
 	public List<Map<String, Object>> getCheckPoints(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo);
 
@@ -30,9 +30,14 @@ public interface ISampleInspectReportMService extends IService<SampleInspectRepo
 
 	public Integer queryCustOdrNo(String factNo, String custOdrNo);
 
-	public void insertReportM(String factNo, String custOdrNo, String versionNo, String paceCode, String modelColour, String orderType, String createBy);
+//	public void insertReportM(String factNo, String custOdrNo, String versionNo, String paceCode, String modelColour, String orderType, String createBy);
+	public void insertReportM(String factNo, String custOdrNo, String versionNo, String orderType, String createBy);
 
-	public void insertReportD(String factNo, String custOdrNo, String versionNo);
+	public void insertReportD(String factNo, String custOdrNo, String versionNo, String createBy);
+
+	public void addQuestion(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo, String checkPointsNo, String findQuestion);
+
+	public void subtractQuestion(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo, String checkPointsNo);
 
 	/**
 	 * 添加一对多
