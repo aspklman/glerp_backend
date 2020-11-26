@@ -19,6 +19,8 @@ import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.order.entity.WholeProcessReport;
 import org.jeecg.modules.order.service.IWholeProcessReportService;
 import java.util.Date;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -71,7 +73,8 @@ public class WholeProcessReportController {
 									  HttpServletRequest req) {
 		Result<IPage<WholeProcessReport>> result = new Result<IPage<WholeProcessReport>>();
 		QueryWrapper<WholeProcessReport> queryWrapper = QueryGenerator.initQueryWrapper(wholeProcessReport, req.getParameterMap());
-		queryWrapper.orderByDesc("订单交期");
+//		queryWrapper.and(wrapper -> wrapper.eq("出货状况", "N"));
+		queryWrapper.orderByDesc("订单交期", "fact_odr_no_in");
 		Page<WholeProcessReport> page = new Page<WholeProcessReport>(pageNo, pageSize);
 		IPage<WholeProcessReport> pageList = wholeProcessReportService.page(page, queryWrapper);
 		result.setSuccess(true);
@@ -261,37 +264,59 @@ public class WholeProcessReportController {
 		return result;
 	}
 
-  /**
+     /**
       * 导出excel
-   *
-   * @param request
-   * @param response
-   */
-  @RequestMapping(value = "/exportXls")
-  public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
-      // Step.1 组装查询条件
-      QueryWrapper<WholeProcessReport> queryWrapper = null;
-      try {
-          String paramsStr = request.getParameter("paramsStr");
-          if (oConvertUtils.isNotEmpty(paramsStr)) {
-              String deString = URLDecoder.decode(paramsStr, "UTF-8");
-              WholeProcessReport wholeProcessReport = JSON.parseObject(deString, WholeProcessReport.class);
-              queryWrapper = QueryGenerator.initQueryWrapper(wholeProcessReport, request.getParameterMap());
-          }
-      } catch (UnsupportedEncodingException e) {
-          e.printStackTrace();
-      }
+      *
+      * @param request
+      */
+     @RequestMapping(value = "/exportXls")
+     public ModelAndView exportXls(HttpServletRequest request, WholeProcessReport wholeProcessReport) {
+         // Step.1 组装查询条件查询数据
+         QueryWrapper<WholeProcessReport> queryWrapper = QueryGenerator.initQueryWrapper(wholeProcessReport, request.getParameterMap());
+         List<WholeProcessReport> pageList = wholeProcessReportService.list(queryWrapper);
+         // Step.2 AutoPoi 导出Excel
+         ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
+         mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
+         //导出文件名称
+         mv.addObject(NormalExcelConstants.FILE_NAME, "全流程报表");
+         mv.addObject(NormalExcelConstants.CLASS, WholeProcessReport.class);
+         LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+         mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("全流程报表", "导出人:"+user.getRealname(), "全流程报表"));
+         return mv;
+     }
 
-      //Step.2 AutoPoi 导出Excel
-      ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
-      List<WholeProcessReport> pageList = wholeProcessReportService.list(queryWrapper);
-      //导出文件名称
-      mv.addObject(NormalExcelConstants.FILE_NAME, "全流程报表列表");
-      mv.addObject(NormalExcelConstants.CLASS, WholeProcessReport.class);
-      mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("全流程报表列表数据", "导出人:Jeecg", "导出信息"));
-      mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
-      return mv;
-  }
+//  /**
+//      * 导出excel
+//   *
+//   * @param request
+//   * @param response
+//   */
+//  @RequestMapping(value = "/exportXls")
+//  public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
+//      // Step.1 组装查询条件
+//      QueryWrapper<WholeProcessReport> queryWrapper = null;
+//      try {
+//          String paramsStr = request.getParameter("paramsStr");
+//          if (oConvertUtils.isNotEmpty(paramsStr)) {
+//              String deString = URLDecoder.decode(paramsStr, "UTF-8");
+//              WholeProcessReport wholeProcessReport = JSON.parseObject(deString, WholeProcessReport.class);
+//              queryWrapper = QueryGenerator.initQueryWrapper(wholeProcessReport, request.getParameterMap());
+//          }
+//      } catch (UnsupportedEncodingException e) {
+//          e.printStackTrace();
+//      }
+//
+//      //Step.2 AutoPoi 导出Excel
+////      queryWrapper.and(wrapper -> wrapper.eq("订单交期", "20201105"));
+//      ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
+//      List<WholeProcessReport> pageList = wholeProcessReportService.list(queryWrapper);
+//      //导出文件名称
+//      mv.addObject(NormalExcelConstants.FILE_NAME, "全流程报表列表");
+//      mv.addObject(NormalExcelConstants.CLASS, WholeProcessReport.class);
+//      mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("全流程报表列表数据", "导出人:Jeecg", "导出信息"));
+//      mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
+//      return mv;
+//  }
 
   /**
       * 通过excel导入数据

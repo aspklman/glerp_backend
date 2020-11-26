@@ -12,6 +12,7 @@
 
     <select id="getDefectQty" parameterType="java.lang.String" resultType="HashMap">
         SELECT type "type",
+               type_en "typeEn",
                minor "minor",
                major "major",
                critical "critical"
@@ -124,14 +125,16 @@
            SELECT a.fact_no,
                   a.fact_odr_no,
                   a.cust_odr_no,
-                  #{versionNo},
+                  (SELECT NVL (MAX (version_no), 0) + 1
+                   FROM sample_inspect_report_m
+                   WHERE fact_no = #{factNo} AND cust_odr_no = #{custOdrNo}) version_no,
                   b.style_shorten,
                   b.artic_no,
                   b.artic_nm,
                   #{orderType},
                   a.cus_qty,
                   CURRENT_TIMESTAMP,
-                  NULL,
+                  '9',
                   NVL ( (SELECT MAX (TO_NUMBER (id)) FROM sample_inspect_report_m), 0) + 1,
                   #{createBy},
                   CURRENT_TIMESTAMP
@@ -166,7 +169,9 @@
            SELECT a1.fact_no,
                    a1.fact_odr_no,
                    a1.cust_odr_no,
-                   #{versionNo},
+                   (SELECT NVL (MAX (version_no), 0) + 1
+                    FROM sample_inspect_report_d
+                    WHERE fact_no = #{factNo} AND cust_odr_no = #{custOdrNo}) version_no,
                    a2.style_shorten,
                    b.item_main_no,
                    b.item_medium_no,
@@ -201,6 +206,18 @@
                    AND a1.fact_no = #{factNo}
                    AND a1.cust_odr_no = #{custOdrNo}
     </insert>
+
+    <update id="addTraceabilityCode" parameterType="java.lang.String">
+        UPDATE sample_inspect_report_m
+           SET traceability_code = #{traceabilityCode}
+         WHERE fact_no = #{factNo} AND cust_odr_no = #{custOdrNo} AND version_no = #{versionNo}
+    </update>
+
+    <update id="subtractTraceabilityCode" parameterType="java.lang.String">
+        UPDATE sample_inspect_report_m
+           SET traceability_code = NULL
+         WHERE fact_no = #{factNo} AND cust_odr_no = #{custOdrNo} AND version_no = #{versionNo}
+    </update>
 
     <update id="addQuestion" parameterType="java.lang.String">
         UPDATE sample_inspect_report_d

@@ -44,6 +44,8 @@ public class SampleInspectReportM implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private java.util.Date inspectDate;
+	/**可追溯编码*/
+	private java.lang.String traceabilityCode;
 	/**验货结果*/
 	@Dict(dicCode="inspector_decision")
 	private java.lang.String inspectorDecision;

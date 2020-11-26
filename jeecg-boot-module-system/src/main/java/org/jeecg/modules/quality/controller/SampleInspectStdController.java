@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.aspect.annotation.PermissionData;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.vo.LoginUser;
@@ -63,6 +64,7 @@ public class SampleInspectStdController {
 	@AutoLog(value = "验货抽检标准-分页列表查询")
 	@ApiOperation(value="验货抽检标准-分页列表查询", notes="验货抽检标准-分页列表查询")
 	@GetMapping(value = "/list")
+	@PermissionData(pageComponent="quality/SampleInspectStdList")
 	public Result<IPage<SampleInspectStd>> queryPageList(SampleInspectStd sampleInspectStd,
 									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,

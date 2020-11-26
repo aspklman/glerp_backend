@@ -64,14 +64,24 @@ public class SampleInspectReportMServiceImpl extends ServiceImpl<SampleInspectRe
 	}
 
 	@Override
-	public void insertReportM(String factNo, String custOdrNo, String versionNo, String orderType, String createBy) {
+	public void insertReportM(String factNo, String custOdrNo, String orderType, String createBy) {
 //		sampleInspectReportMMapper.insertReportM(factNo, custOdrNo, versionNo, paceCode, modelColour, orderType, createBy);
-		sampleInspectReportMMapper.insertReportM(factNo, custOdrNo, versionNo, orderType, createBy);
+		sampleInspectReportMMapper.insertReportM(factNo, custOdrNo, orderType, createBy);
 	}
 
 	@Override
-	public void insertReportD(String factNo, String custOdrNo, String versionNo, String createBy) {
-		sampleInspectReportMMapper.insertReportD(factNo, custOdrNo, versionNo, createBy);
+	public void insertReportD(String factNo, String custOdrNo, String createBy) {
+		sampleInspectReportMMapper.insertReportD(factNo, custOdrNo, createBy);
+	}
+
+	@Override
+	public void addTraceabilityCode(String factNo, String custOdrNo, String versionNo, String traceabilityCode) {
+		sampleInspectReportMMapper.addTraceabilityCode(factNo, custOdrNo, versionNo, traceabilityCode);
+	}
+
+	@Override
+	public void subtractTraceabilityCode(String factNo, String custOdrNo, String versionNo) {
+		sampleInspectReportMMapper.subtractTraceabilityCode(factNo, custOdrNo, versionNo);
 	}
 
 	@Override

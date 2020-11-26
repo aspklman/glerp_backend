@@ -332,7 +332,7 @@ public class SampleInspectReportMController {
 //			 String orderType = paramReportM.orderType;
 			 String[] p = pssr.split(",");
 			 String custOdrNo = p[0];
-			 String versionNo = p[1];
+//			 String versionNo = p[1];
 //			 String paceCode = p[2];
 //			 String modelColour = p[3];
 			 String orderType = p[4];
@@ -344,10 +344,12 @@ public class SampleInspectReportMController {
 //			 String orderType = (String) object.get("orderType");
 			 String createBy = loginUser.getUsername();
 //			 log.info("插入主档：" + factNo + "/" + custOdrNo + "/" + versionNo + "/" +paceCode + "/" + modelColour + "/" + orderType + "/" + createBy);
-			 log.info("插入主档：" + factNo + "/" + custOdrNo + "/" + versionNo + "/" + orderType + "/" + createBy);
+//			 log.info("插入主档：" + factNo + "/" + custOdrNo + "/" + versionNo + "/" + orderType + "/" + createBy);
+			 log.info("插入主档：" + factNo + "/" + custOdrNo + "/" + orderType + "/" + createBy);
 //			 this.sampleInspectReportMService.insertReportM(factNo, custOdrNo, versionNo, paceCode, modelColour, orderType, createBy);
 		try {
-			this.sampleInspectReportMService.insertReportM(factNo, custOdrNo, versionNo, orderType, createBy);
+//			this.sampleInspectReportMService.insertReportM(factNo, custOdrNo, versionNo, orderType, createBy);
+			this.sampleInspectReportMService.insertReportM(factNo, custOdrNo, orderType, createBy);
 		} catch(Exception e) {
 			return result.error500("新增失败！" + e.getMessage());
 		}
@@ -377,17 +379,70 @@ public class SampleInspectReportMController {
 			String factNo = loginUser.getFactNo();
 			String[] p = pssr.split(",");
 			String custOdrNo = p[0];
-			String versionNo = p[1];
+//			String versionNo = p[1];
 		    String createBy = loginUser.getUsername();
-			log.info("插入子档：" + factNo + "/" + custOdrNo + "/" + versionNo + "/" + createBy);
+//			log.info("插入子档：" + factNo + "/" + custOdrNo + "/" + versionNo + "/" + createBy);
+			log.info("插入子档：" + factNo + "/" + custOdrNo + "/" + createBy);
 			try {
-				this.sampleInspectReportMService.insertReportD(factNo, custOdrNo, versionNo, createBy);
+//				this.sampleInspectReportMService.insertReportD(factNo, custOdrNo, versionNo, createBy);
+				this.sampleInspectReportMService.insertReportD(factNo, custOdrNo, createBy);
 			} catch (Exception e) {
 				return result.error500("新增失败！");
 			}
 
 			return result.ok("新增成功！");
 //		 }
+	 }
+
+	 /**
+	  * 添加可追溯编码
+	  *
+	  * @param pssr
+	  * @return
+	  */
+	 @AutoLog(value = "验货报告主表-添加可追溯编码")
+	 @ApiOperation(value = "验货报告主表-添加可追溯编码", notes = "验货报告主表-添加可追溯编码")
+	 @GetMapping(value = "/addTraceabilityCode")
+	 public Result<?> addTraceabilityCode(@RequestParam("pssr") String pssr) {
+		 Result result = new Result();
+		 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+		 String factNo = loginUser.getFactNo();
+		 String[] p = pssr.split(",");
+		 String custOdrNo = p[0];
+		 String versionNo = p[1];
+		 String traceabilityCode = p[2];
+		 log.info("参数4：" + factNo + "/" + custOdrNo + "/" +  versionNo + "/" +  traceabilityCode);
+		 try {
+			 this.sampleInspectReportMService.addTraceabilityCode(factNo, custOdrNo, versionNo, traceabilityCode);
+		 } catch (Exception e) {
+			 return result.error500("提交失败！");
+		 }
+		 return result.ok("提交成功！");
+	 }
+
+	 /**
+	  * 删除可追溯编码
+	  *
+	  * @param pssr
+	  * @return
+	  */
+	 @AutoLog(value = "验货报告主表-删除可追溯编码")
+	 @ApiOperation(value = "验货报告主表-删除可追溯编码", notes = "验货报告主表-删除可追溯编码")
+	 @GetMapping(value = "/subtractTraceabilityCode")
+	 public Result<?> subtractTraceabilityCode(@RequestParam("pssr") String pssr) {
+		 Result result = new Result();
+		 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+		 String factNo = loginUser.getFactNo();
+		 String[] p = pssr.split(",");
+		 String custOdrNo = p[0];
+		 String versionNo = p[1];
+		 log.info("参数3：" + factNo + "/" + custOdrNo + "/" +  versionNo);
+		 try {
+			 this.sampleInspectReportMService.subtractTraceabilityCode(factNo, custOdrNo, versionNo);
+		 } catch (Exception e) {
+			 return result.error500("删除失败！");
+		 }
+		 return result.ok("删除成功！");
 	 }
 
 	 /**

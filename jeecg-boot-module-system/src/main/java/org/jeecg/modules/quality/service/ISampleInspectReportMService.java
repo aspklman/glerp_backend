@@ -31,9 +31,15 @@ public interface ISampleInspectReportMService extends IService<SampleInspectRepo
 	public Integer queryCustOdrNo(String factNo, String custOdrNo);
 
 //	public void insertReportM(String factNo, String custOdrNo, String versionNo, String paceCode, String modelColour, String orderType, String createBy);
-	public void insertReportM(String factNo, String custOdrNo, String versionNo, String orderType, String createBy);
+//	public void insertReportM(String factNo, String custOdrNo, String versionNo, String orderType, String createBy);
+	public void insertReportM(String factNo, String custOdrNo, String orderType, String createBy);
 
-	public void insertReportD(String factNo, String custOdrNo, String versionNo, String createBy);
+//	public void insertReportD(String factNo, String custOdrNo, String versionNo, String createBy);
+	public void insertReportD(String factNo, String custOdrNo, String createBy);
+
+	public void addTraceabilityCode(String factNo, String custOdrNo, String versionNo, String traceabilityCode);
+
+	public void subtractTraceabilityCode(String factNo, String custOdrNo, String versionNo);
 
 	public void addQuestion(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo, String checkPointsNo, String findQuestion);
 

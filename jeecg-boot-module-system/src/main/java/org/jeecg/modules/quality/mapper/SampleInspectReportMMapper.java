@@ -31,10 +31,14 @@ public interface SampleInspectReportMMapper extends BaseMapper<SampleInspectRepo
 
 //    public void insertReportM(@Param("factNo") String factNo, @Param("custOdrNo") String custOdrNo, @Param("versionNo") Integer versionNo, @Param("paceCode") String paceCode, @Param("modelColour") String modelColour, @Param("orderType") String orderType, @Param("createBy") String createBy);
 //    public void insertReportM(String factNo, String custOdrNo, String versionNo, String paceCode, String modelColour, String orderType, String createBy);
-    public void insertReportM(String factNo, String custOdrNo, String versionNo, String orderType, String createBy);
+    public void insertReportM(String factNo, String custOdrNo, String orderType, String createBy);
 
 //    public void insertReportD(@Param("factNo")String factNo, @Param("custOdrNo") String custOdrNo, @Param("versionNo") Integer versionNo);
-    public void insertReportD(String factNo, String custOdrNo, String versionNo, String createBy);
+    public void insertReportD(String factNo, String custOdrNo, String createBy);
+
+    public void addTraceabilityCode(String factNo, String custOdrNo, String versionNo, String traceabilityCode);
+
+    public void subtractTraceabilityCode(String factNo, String custOdrNo, String versionNo);
 
     public void addQuestion(String factNo, String custOdrNo, String versionNo, String styleShorten, String itemMainNo, String itemMediumNo, String checkPointsNo, String findQuestion);
 
