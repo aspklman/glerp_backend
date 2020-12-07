@@ -37,10 +37,10 @@ public class WholeProcessReport {
 //	@Excel(name = "生产部别", width = 15)
     @ApiModelProperty(value = "proDept")
 	private java.lang.String proDept;
-	/**customNo*/
-//	@Excel(name = "客户编号", width = 15)
-    @ApiModelProperty(value = "customNo")
-	private java.lang.String customNo;
+//	/**customNo*/
+////	@Excel(name = "客户编号", width = 15)
+//    @ApiModelProperty(value = "customNo")
+//	private java.lang.String customNo;
 	/**接单日期*/
 	@Excel(name = "接单日期", width = 15)
     @ApiModelProperty(value = "接单日期")

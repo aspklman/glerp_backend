@@ -9,6 +9,12 @@
         ORDER BY size_no
     </select>
 
+    <select id="getLocArea" parameterType="java.lang.String" resultType="HashMap">
+        SELECT size_no "size_no", loc_area "loc_area"
+        FROM v_whole_process_loc_area
+        WHERE fact_no = #{factNo} AND TRIM (fact_odr_no) = #{factOdrNo}
+    </select>
+
     <select id="getStockData" parameterType="java.lang.String" resultType="HashMap">
         SELECT TO_CHAR (owe_qty) "owe_qty", in_date "in_date", shp_status "shp_status"
         FROM v_whole_process_wh

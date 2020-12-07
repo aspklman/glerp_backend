@@ -105,7 +105,34 @@ public class WholeProcessReportController {
 			 result.setResult(sizeQty);
 			 result.success("获取成功!");
 		 }
-		 log.info("结果：" + result);
+		 log.info("SIZE数量查询：" + result);
+		 return result;
+	 }
+
+	 /**
+	  * 存放区域查询
+	  *
+	  * @param pssr
+	  * @return
+	  */
+	 @AutoLog(value = "全流程报表-存放区域查询")
+	 @ApiOperation(value = "全流程报表-存放区域查询", notes = "全流程报表-存放区域查询")
+	 @GetMapping(value = "/getLocArea")
+	 public Result<List<Map<String, Object>>> getLocArea(@RequestParam("pssr") String pssr) {
+		 Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
+		 if (pssr == null) {
+			 result.error500("参数不识别！");
+		 } else {
+			 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+			 String factNo = loginUser.getFactNo();
+//			 log.info("厂别：" + factNo);
+			 String factOdrNo = pssr.trim().toString();
+//			 log.info("工厂订单：" + factOdrNo + '/');
+			 List<Map<String, Object>> locArea = this.wholeProcessReportService.getLocArea(factNo, factOdrNo);
+			 result.setResult(locArea);
+			 result.success("获取成功!");
+		 }
+		 log.info("存放区域查询：" + result);
 		 return result;
 	 }
 
@@ -132,7 +159,7 @@ public class WholeProcessReportController {
 			 result.setResult(stockData);
 			 result.success("获取成功!");
 		 }
-		 log.info("结果：" + result);
+		 log.info("库存数据查询：" + result);
 		 return result;
 	 }
 
@@ -159,7 +186,7 @@ public class WholeProcessReportController {
 			 result.setResult(stockData);
 			 result.success("获取成功!");
 		 }
-		 log.info("结果：" + result);
+		 log.info("验货报告查询：" + result);
 		 return result;
 	 }
 	

@@ -17,6 +17,8 @@ public interface WholeProcessReportMapper extends BaseMapper<WholeProcessReport>
 
     public List<Map<String, Object>> getSizeQty(String factNo, String factOdrNo);
 
+    public List<Map<String, Object>> getLocArea(String factNo, String factOdrNo);
+
     public Map<String, Object> getStockData(String factNo, String factOdrNo);
 
     public Map<String, Object> getInspectReport(String factNo, String custOdrNo);

@@ -29,6 +29,11 @@ public class WholeProcessReportServiceImpl extends ServiceImpl<WholeProcessRepor
     }
 
     @Override
+    public List<Map<String, Object>> getLocArea(String factNo, String factOdrNo) {
+        return wholeProcessReportMapper.getLocArea(factNo, factOdrNo);
+    }
+
+    @Override
     public Map<String, Object> getStockData(String factNo, String factOdrNo) {
         return wholeProcessReportMapper.getStockData(factNo, factOdrNo);
     }
