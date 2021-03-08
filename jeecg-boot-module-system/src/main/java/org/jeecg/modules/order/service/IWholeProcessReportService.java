@@ -14,12 +14,12 @@ import java.util.Map;
  */
 public interface IWholeProcessReportService extends IService<WholeProcessReport> {
 
-    public List<Map<String, Object>> getSizeQty(String factNo, String factOdrNo);
+    List<Map<String, Object>> getSizeQty(String factNo, String factOdrNo);
 
-    public List<Map<String, Object>> getLocArea(String factNo, String factOdrNo);
+    List<Map<String, Object>> getLocArea(String factNo, String factOdrNo);
 
-    public Map<String, Object> getStockData(String factNo, String factOdrNo);
+    Map<String, Object> getStockData(String factNo, String factOdrNo);
 
-    public Map<String, Object> getInspectReport(String factNo, String custOdrNo);
+    Map<String, Object> getInspectReport(String factNo, String custOdrNo);
 
 }

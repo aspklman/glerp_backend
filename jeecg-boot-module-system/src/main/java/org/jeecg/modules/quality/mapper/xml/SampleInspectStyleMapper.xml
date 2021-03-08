@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.quality.mapper.SampleInspectStyleMapper">
+
+    <select id="getCheckPoints" parameterType="java.lang.String" resultType="HashMap">
+          WITH t_style
+                 AS (SELECT *
+                       FROM sample_inspect_style
+                      WHERE style_shorten = #{styleShorten})
+              SELECT DECODE (b.style_shorten, NULL, 0, 1) "styleMark",
+                     a.item_main_no "itemMainNo",
+                     a.item_medium_no "itemMediumNo",
+                     a.check_points_no "checkPointsNo",
+                     a.check_points_cn "checkPointsCn",
+                     a.test_method_reqs_cn "testMethodReqsCn"
+                FROM sample_inspect_item a, t_style b
+               WHERE     a.fact_no = b.fact_no(+)
+                     AND a.item_main_no = b.item_main_no(+)
+                     AND a.item_medium_no = b.item_medium_no(+)
+                     AND a.check_points_no = b.check_points_no(+)
+                     AND a.fact_no = #{factNo}
+                     AND a.item_main_no = #{itemMainNo}
+                     AND a.item_medium_no = #{itemMediumNo}
+            ORDER BY a.check_points_no
+    </select>
+
+    <insert id="addCheckPoint" parameterType="java.lang.String">
+        INSERT INTO sample_inspect_style (fact_no,
+                                         style_shorten,
+                                         item_main_no,
+                                         item_medium_no,
+                                         check_points_no)
+                                 VALUES (#{factNo},
+                                         #{styleShorten},
+                                         #{itemMainNo},
+                                         #{itemMediumNo},
+                                         #{checkPointsNo})
+    </insert>
+
+    <delete id="subtractCheckPoint" parameterType="java.lang.String">
+        DELETE FROM sample_inspect_style
+        WHERE   fact_no = #{factNo}
+            AND style_shorten = #{styleShorten}
+            AND item_main_no = #{itemMainNo}
+            AND item_medium_no = #{itemMediumNo}
+            AND check_points_no = #{checkPointsNo}
+    </delete>
+
+</mapper>

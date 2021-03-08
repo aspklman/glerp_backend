@@ -52,6 +52,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/order/wholeProcessReport")
 public class WholeProcessReportController {
+
 	@Autowired
 	private IWholeProcessReportService wholeProcessReportService;
 	
@@ -74,7 +75,7 @@ public class WholeProcessReportController {
 		Result<IPage<WholeProcessReport>> result = new Result<IPage<WholeProcessReport>>();
 		QueryWrapper<WholeProcessReport> queryWrapper = QueryGenerator.initQueryWrapper(wholeProcessReport, req.getParameterMap());
 //		queryWrapper.and(wrapper -> wrapper.eq("出货状况", "N"));
-		queryWrapper.orderByDesc("订单交期", "fact_odr_no_in");
+		queryWrapper.orderByDesc("订单交期").orderByAsc("fact_odr_no_in");
 		Page<WholeProcessReport> page = new Page<WholeProcessReport>(pageNo, pageSize);
 		IPage<WholeProcessReport> pageList = wholeProcessReportService.page(page, queryWrapper);
 		result.setSuccess(true);

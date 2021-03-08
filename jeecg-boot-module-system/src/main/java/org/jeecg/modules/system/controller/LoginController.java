@@ -10,6 +10,7 @@ import org.apache.shiro.subject.Subject;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.system.api.ISysBaseAPI;
+//import org.jeecg.common.system.base.service.BaseCommonService;
 import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.DySmsHelper;
@@ -42,6 +43,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
+
 /**
  * @Author scott
  * @since 2018-12-17
@@ -61,6 +63,8 @@ public class LoginController {
     private RedisUtil redisUtil;
 	@Autowired
     private ISysDepartService sysDepartService;
+//	@Autowired
+//	private BaseCommonService baseCommonService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ApiOperation("登录接口")
@@ -122,6 +126,67 @@ public class LoginController {
 	    redisUtil.del(CommonConstant.LOGIN_USER_CACHERULES_ROLE + sysUser.getUsername());
 	    redisUtil.del(CommonConstant.LOGIN_USER_CACHERULES_PERMISSION + sysUser.getUsername());
 		return Result.ok("退出登录成功！");
+	}
+	
+	/**
+	 * app登录
+	 * @param sysLoginModel
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/mLogin", method = RequestMethod.POST)
+	public Result<JSONObject> mLogin(@RequestBody SysLoginModel sysLoginModel) throws Exception {
+		Result<JSONObject> result = new Result<JSONObject>();
+		String username = sysLoginModel.getUsername();
+		String password = sysLoginModel.getPassword();
+
+		//1. 校验用户是否有效
+		SysUser sysUser = sysUserService.getUserByName(username);
+		result = sysUserService.checkUserIsEffective(sysUser);
+		if(!result.isSuccess()) {
+			return result;
+		}
+
+		//2. 校验用户名或密码是否正确
+		String userpassword = PasswordUtil.encrypt(username, password, sysUser.getSalt());
+		String syspassword = sysUser.getPassword();
+		if (!syspassword.equals(userpassword)) {
+			result.error500("用户名或密码错误");
+			return result;
+		}
+
+		String orgCode = sysUser.getOrgCode();
+		if(oConvertUtils.isEmpty(orgCode)) {
+			//如果当前用户无选择部门 查看部门关联信息
+			List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
+			if (departs == null || departs.size() == 0) {
+				result.error500("用户暂未归属部门,不可登录!");
+				return result;
+			}
+			orgCode = departs.get(0).getOrgCode();
+			sysUser.setOrgCode(orgCode);
+			this.sysUserService.updateUserDepart(username, orgCode);
+		}
+		JSONObject obj = new JSONObject();
+		//用户登录信息
+		obj.put("userInfo", sysUser);
+
+		log.info("用户：" + sysUser);
+
+		// 生成token
+		String token = JwtUtil.sign(username, syspassword);
+		// 设置超时时间
+		redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, token);
+		redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME*2 / 1000);
+
+		//token 信息
+		obj.put("token", token);
+		result.setResult(obj);
+		result.setSuccess(true);
+		result.setCode(200);
+		sysBaseAPI.addLog("用户名: " + username + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
+//		baseCommonService.addLog("用户名: " + username + ",登录成功[移动端]！", CommonConstant.LOG_TYPE_1, null);
+		return result;
 	}
 	
 	/**

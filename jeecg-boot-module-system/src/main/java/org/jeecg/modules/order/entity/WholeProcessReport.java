@@ -27,7 +27,9 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value="v_whole_process_order对象", description="全流程报表")
-public class WholeProcessReport {
+public class WholeProcessReport implements Serializable {
+
+	private static final long serialVersionId = 1L;
     
 	/**factNo*/
 //	@Excel(name = "厂区编号", width = 15)

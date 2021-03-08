@@ -23,22 +23,18 @@ public class WholeProcessReportServiceImpl extends ServiceImpl<WholeProcessRepor
     @Autowired
     private WholeProcessReportMapper wholeProcessReportMapper;
 
-    @Override
     public List<Map<String, Object>> getSizeQty(String factNo, String factOdrNo) {
         return wholeProcessReportMapper.getSizeQty(factNo, factOdrNo);
     }
 
-    @Override
     public List<Map<String, Object>> getLocArea(String factNo, String factOdrNo) {
         return wholeProcessReportMapper.getLocArea(factNo, factOdrNo);
     }
 
-    @Override
     public Map<String, Object> getStockData(String factNo, String factOdrNo) {
         return wholeProcessReportMapper.getStockData(factNo, factOdrNo);
     }
 
-    @Override
     public Map<String, Object> getInspectReport(String factNo, String custOdrNo) {
         return wholeProcessReportMapper.getInspectReport(factNo, custOdrNo);
     }

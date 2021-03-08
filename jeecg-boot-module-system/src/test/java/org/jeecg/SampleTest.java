@@ -1,6 +1,7 @@
 package org.jeecg;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -8,11 +9,14 @@ import org.jeecg.modules.demo.mock.MockController;
 import org.jeecg.modules.demo.test.entity.JeecgDemo;
 import org.jeecg.modules.demo.test.mapper.JeecgDemoMapper;
 import org.jeecg.modules.demo.test.service.IJeecgDemoService;
+import org.jeecg.modules.order.service.IWholeProcessReportService;
+import org.jeecg.modules.order.service.impl.WholeProcessReportServiceImpl;
 import org.jeecg.modules.system.service.ISysDataLogService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -27,6 +31,16 @@ public class SampleTest {
 	private ISysDataLogService sysDataLogService;
 	@Resource
 	private MockController mock;
+	@Resource
+	private IWholeProcessReportService wholeProcessReportService;
+
+	@Test
+	public void test888() {
+		System.out.println("------ 开始测试 ------");
+		List<Map<String, Object>> list= wholeProcessReportService.getLocArea("0006", "GD2012-242");
+		list.forEach(System.out::println);
+		System.out.println("------ 结束测试 ------");
+	}
 
 	@Test
 	public void testSelect() {
