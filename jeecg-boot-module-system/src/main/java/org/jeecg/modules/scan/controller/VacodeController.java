@@ -50,7 +50,7 @@ import io.swagger.annotations.ApiOperation;
 @Slf4j
 @Api(tags="增值表")
 @RestController
-@RequestMapping("/scan/vacode")
+@RequestMapping("/scan/basic/vacode")
 public class VacodeController {
 	@Autowired
 	private IVacodeService vacodeService;

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.scan.mapper.StgscanRecMapper">
+
+    <select id="getLocArea" parameterType="String" resultType="String">
+        SELECT loc_area
+		FROM areas
+		WHERE fact_no = #{factNo}
+			AND stk_no = #{stkNo}
+			AND loc_no = #{locateNo}
+			AND loc_area = #{locArea}
+    </select>
+
+    <select id="getMonthlySettlement" parameterType="String" resultType="String">
+        SELECT trim(to_char(max(stk_yymm)))
+        FROM pdstk
+        WHERE fact_no = #{factNo} AND trim(stk_no) = #{stkNo}
+    </select>
+
+    <select id="getOrderData" parameterType="String" resultType="HashMap">
+        SELECT b.style_no "styleNo",
+			 Trim(c.artic_no) "articNo",
+			 c.style_color "styleColor",
+			 a.size_no "sizeNo",
+			 a.qty "sizeQty",
+			 a.fact_odr_no "factOdrNo",
+			 Trim(b.custom_no) "customNo"
+	    FROM outboxd a,
+			  odrm  b,
+			  stylem c
+         WHERE a.fact_no = b.fact_no
+            AND a.fact_odr_no = b.fact_odr_no
+            AND c.fact_no = b.fact_no
+            AND c.style_no = b.style_no
+            AND a.fact_no = #{factNo}
+            AND a.outbox_no = #{outboxNo}
+    </select>
+
+    <select id="getRepeatScan" parameterType="String" resultType="Integer">
+        SELECT COUNT (*) "repeatScan"
+        FROM stgscan_rec
+        WHERE fact_no = #{factNo}
+            AND bar_no = #{outboxNo}
+    </select>
+
+    <select id="getMoldingData" parameterType="String" resultType="HashMap">
+        SELECT e.pro_fact "proFact",
+               e.sec_no "secNo",
+               outboxd.qty "outboxQty",
+               NVL (e.scan_qty, 0) "scanQty"
+          FROM outboxd,
+                 (  SELECT fact_no,
+                           pro_fact,
+                           sec_no,
+                           stg_no,
+                           bar_no,
+                           COUNT (*) scan_qty
+                      FROM stgscan_molding
+                     WHERE fact_no = #{factNo} AND gen_feedback_rmk = '1'
+                  GROUP BY fact_no, pro_fact, sec_no, stg_no, bar_no) e
+         WHERE     outboxd.fact_no = e.fact_no(+)
+               AND outboxd.outbox_no = e.bar_no(+)
+               AND outboxd.fact_no = #{factNo}
+               AND outboxd.outbox_no = Trim(#{outboxNo})
+    </select>
+
+    <select id="getNoGenOrder" parameterType="String" resultType="String">
+        SELECT DISTINCT fact_odr_no
+        FROM outboxd
+        WHERE outbox_no IN
+                     (SELECT bar_no
+                         FROM stgscan_rec
+                        WHERE     fact_no = #{factNo}
+                                AND stk_no = #{stkNo}
+                                AND gen_in_stock_rmk = '0'
+                                AND TRIM (user_no) = #{userNo})
+    </select>
+
+    <select id="getTotalBoxesPairs" parameterType="String" resultType="HashMap">
+        SELECT COUNT (*) "totalBoxes",
+               SUM (a.qty) "totalPairs",
+               COUNT (b.fact_no) "scanBoxes"
+          FROM outboxd a, stgscan_rec b
+         WHERE     a.fact_no = b.fact_no(+)
+               AND a.outbox_no = b.bar_no(+)
+               AND a.fact_no = #{factNo}
+               AND a.fact_odr_no = #{factOdrNo}
+    </select>
+
+<!--    <select id="getTotalBoxesPairs" parameterType="String" resultType="HashMap">-->
+<!--        SELECT COUNT (*) "totalBoxes",-->
+<!--               SUM (qty) "totalPairs"-->
+<!--        FROM outboxd-->
+<!--        WHERE fact_no = #{factNo}-->
+<!--            AND fact_odr_no = #{factOdrNo}-->
+<!--    </select>-->
+
+<!--    <select id="getScannedBoxes" parameterType="String" resultType="Integer">-->
+<!--        SELECT COUNT (*) "scanBoxes"-->
+<!--        FROM stgscan_rec, outboxd-->
+<!--        WHERE stgscan_rec.fact_no = outboxd.fact_no-->
+<!--            AND stgscan_rec.bar_no = outboxd.outbox_no-->
+<!--            AND outboxd.fact_no = #{factNo}-->
+<!--            AND outboxd.fact_odr_no = #{factOdrNo}-->
+<!--    </select>-->
+
+    <select id="getLastLocArea" parameterType="String" resultType="String">
+        SELECT Trim(loc_area) "lastLocArea"
+		FROM stgscan_rec
+		WHERE rec_date || rec_time =
+						( SELECT MAX (rec_date || rec_time)
+							  FROM stgscan_rec, outboxd
+							  WHERE stgscan_rec.fact_no = outboxd.fact_no
+								  AND stgscan_rec.bar_no = outboxd.outbox_no
+								  AND outboxd.fact_no = #{factNo}
+								  AND outboxd.fact_odr_no = #{factOdrNo} )
+    </select>
+
+    <insert id="insertScanRecord" parameterType="String">
+        INSERT INTO stgscan_rec (PRO_DATE,
+                                 USER_NO,
+                                 PRO_FACT,
+                                 FACT_NO,
+                                 STG_NO,
+                                 BAR_NO,
+                                 REC_DATE,
+                                 REC_TIME,
+                                 SEC_NO,
+                                 IN_NO,
+                                 STK_NO,
+                                 LOCATE_NO,
+                                 SCAN_IP,
+                                 GEN_IN_STOCK_RMK,
+                                 LOC_AREA)
+         VALUES (#{recDate},
+                 #{userNo},
+                 #{proFact},
+                 #{factNo},
+                 'A',
+                 #{barNo},
+                 #{recDate},
+                 #{recTime},
+                 #{secNo},
+                 NULL,
+                 #{stkNo},
+                 #{locateNo},
+                 NULL,
+                 '0',
+                 #{locArea})
+    </insert>
+
+    <select id="genInStock" statementType="CALLABLE" parameterType="Map">
+        {call p_sis_gen_in_stock(
+            #{factNo,mode=IN,jdbcType=VARCHAR},
+            #{userNo,mode=IN,jdbcType=VARCHAR},
+            #{oReturn,mode=OUT,jdbcType=VARCHAR}
+        )}
+    </select>
+
+    <delete id="deleteScanRecord" parameterType="String">
+        DELETE stgscan_rec
+        WHERE fact_no = #{factNo}
+          AND bar_no = #{barNo}
+          AND gen_in_stock_rmk = '0'
+    </delete>
+
+</mapper>

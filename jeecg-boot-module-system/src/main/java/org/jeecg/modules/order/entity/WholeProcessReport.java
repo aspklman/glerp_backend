@@ -95,6 +95,10 @@ public class WholeProcessReport implements Serializable {
     @Excel(name = "入库欠数", width = 15)
     @ApiModelProperty(value = "入库欠数")
     private java.lang.Integer oweTqty;
+	/**存放地点*/
+	@Excel(name = "存放地点", width = 15)
+	@ApiModelProperty(value = "存放地点")
+	private java.lang.String locArea;
 	/**满箱状态*/
 	@Excel(name = "满箱状态", width = 15, dicCode = "sf_status_yn")
 	@ApiModelProperty(value = "满箱状态")
