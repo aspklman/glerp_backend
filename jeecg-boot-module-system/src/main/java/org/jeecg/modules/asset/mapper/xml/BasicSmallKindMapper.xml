@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.asset.mapper.BasicSmallKindMapper">
+
+    <select id="getAssetName" parameterType="java.lang.String" resultType="HashMap">
+         SELECT kind_name "assetName",
+                kind_no_mid "kindNoMid",
+                kind_no_main "kindNoMain"
+          FROM basic_small_kind
+         WHERE fact_no = #{factNo} AND kind_no = #{catalogId}
+    </select>
+
+</mapper>

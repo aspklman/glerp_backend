@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.asset.mapper.AssetRecordMapper">
+
+    <select id="getAssetNo" parameterType="java.lang.String" resultType="String">
+         SELECT NVL (LPAD (MAX (SUBSTR (asset_no, 6)) + 1, 6, 0), '000001') "serialNo"
+          FROM asset_record
+         WHERE fact_no = #{factNo} AND catalog_id = #{catalogId}
+    </select>
+
+    <update id="updateAssetDetail" parameterType="HashMap">
+        UPDATE asset_record
+        SET state = #{state},
+            fact_location = #{factLocation},
+            dept_no = #{deptNo},
+            location = #{location},
+            location_fl = #{locationFl},
+            location_dl = #{locationDl},
+            location_fact = #{locationFact},
+            custodian = #{custodian},
+            custodian_user = #{custodianUser},
+            update_by = #{userNo},
+            update_time = current_date
+        WHERE fact_no = #{factNo} AND asset_no = #{assetNo}
+    </update>
+
+</mapper>

@@ -9,6 +9,7 @@ import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.PermissionData;
@@ -65,6 +66,7 @@ public class SampleInspectStyleController {
 	@ApiOperation(value="型体检验项目-分页列表查询", notes="型体检验项目-分页列表查询")
 	@GetMapping(value = "/list")
 	@PermissionData(pageComponent="quality/SampleInspectStyleList")
+    @DS("slave_1")
 	public Result<IPage<SampleInspectStyle>> queryPageList(SampleInspectStyle sampleInspectStyle,
 									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
@@ -87,6 +89,7 @@ public class SampleInspectStyleController {
      @AutoLog(value = "型体检验项目-检查点")
      @ApiOperation(value = "型体检验项目-检查点", notes = "型体检验项目-检查点")
      @GetMapping(value = "/getCheckPoints")
+     @DS("slave_1")
      public Result<List<Map<String, Object>>> getCheckPoints(@RequestParam("pssr") String pssr) {
          Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
          if (pssr == null) {
@@ -116,6 +119,7 @@ public class SampleInspectStyleController {
      @AutoLog(value = "型体检验项目-增加检查点")
      @ApiOperation(value = "型体检验项目-增加检查点", notes = "型体检验项目-增加检查点")
      @GetMapping(value = "/addCheckPoint")
+     @DS("slave_1")
      public void addCheckPoint(@RequestParam("pssr") String pssr) {
          Result result = new Result<>();
          if (pssr == null) {
@@ -143,6 +147,7 @@ public class SampleInspectStyleController {
      @AutoLog(value = "型体检验项目-删除检查点")
      @ApiOperation(value = "型体检验项目-删除检查点", notes = "型体检验项目-删除检查点")
      @GetMapping(value = "/subtractCheckPoint")
+     @DS("slave_1")
      public void subtractCheckPoint(@RequestParam("pssr") String pssr) {
          Result result = new Result<>();
          if (pssr == null) {
@@ -213,6 +218,7 @@ public class SampleInspectStyleController {
 	@AutoLog(value = "型体检验项目-通过id删除")
 	@ApiOperation(value="型体检验项目-通过id删除", notes="型体检验项目-通过id删除")
 	@DeleteMapping(value = "/delete")
+    @DS("slave_1")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			sampleInspectStyleService.removeById(id);
@@ -231,6 +237,7 @@ public class SampleInspectStyleController {
 	@AutoLog(value = "型体检验项目-批量删除")
 	@ApiOperation(value="型体检验项目-批量删除", notes="型体检验项目-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+    @DS("slave_1")
 	public Result<SampleInspectStyle> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<SampleInspectStyle> result = new Result<SampleInspectStyle>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -250,6 +257,7 @@ public class SampleInspectStyleController {
 	@AutoLog(value = "型体检验项目-通过id查询")
 	@ApiOperation(value="型体检验项目-通过id查询", notes="型体检验项目-通过id查询")
 	@GetMapping(value = "/queryById")
+    @DS("slave_1")
 	public Result<SampleInspectStyle> queryById(@RequestParam(name="id",required=true) String id) {
 		Result<SampleInspectStyle> result = new Result<SampleInspectStyle>();
 		SampleInspectStyle sampleInspectStyle = sampleInspectStyleService.getById(id);
@@ -269,6 +277,7 @@ public class SampleInspectStyleController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @DS("slave_1")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<SampleInspectStyle> queryWrapper = null;
@@ -302,6 +311,7 @@ public class SampleInspectStyleController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @DS("slave_1")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

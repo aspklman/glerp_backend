@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.asset.mapper.AssetChangeMapper">
+
+    <select id="getChangeNo" parameterType="java.lang.String" resultType="String">
+         SELECT TO_CHAR (CURRENT_DATE, 'yyyymm') || NVL (LPAD (MAX (SUBSTR (change_no, 7)) + 1, 4, 0), '0001') "change_no"
+          FROM asset_change
+         WHERE     fact_no = #{factNo}
+               AND SUBSTR (change_no, 1, 6) = TO_CHAR (CURRENT_DATE, 'yyyymm')
+    </select>
+
+    <select id="getAssetDetailByNo" parameterType="java.lang.String" resultType="HashMap">
+         SELECT state "state",
+               fact_location "factLocation",
+               dept_no "deptNo",
+               location "location",
+               location_fl "locationFl",
+               location_dl "locationDl",
+               location_fact "locationFact",
+               custodian "custodian",
+               custodian_user "custodianUser"
+          FROM asset_record
+         WHERE fact_no = #{factNo} AND asset_no = #{assetNo}
+    </select>
+
+</mapper>

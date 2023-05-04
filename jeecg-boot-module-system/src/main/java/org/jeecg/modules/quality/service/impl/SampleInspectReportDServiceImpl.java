@@ -1,5 +1,6 @@
 package org.jeecg.modules.quality.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.jeecg.modules.quality.entity.SampleInspectReportD;
 import org.jeecg.modules.quality.mapper.SampleInspectReportDMapper;
 import org.jeecg.modules.quality.service.ISampleInspectReportDService;

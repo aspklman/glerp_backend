@@ -65,7 +65,7 @@ public class SysDictItemController {
 	
 	/**
 	 * @功能：新增
-	 * @param sysDict
+	 * @param sysDictItem
 	 * @return
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)

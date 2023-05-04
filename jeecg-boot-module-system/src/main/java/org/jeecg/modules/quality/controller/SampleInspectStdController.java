@@ -9,6 +9,7 @@ import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.PermissionData;
@@ -65,6 +66,7 @@ public class SampleInspectStdController {
 	@ApiOperation(value="验货抽检标准-分页列表查询", notes="验货抽检标准-分页列表查询")
 	@GetMapping(value = "/list")
 	@PermissionData(pageComponent="quality/SampleInspectStdList")
+	@DS("slave_1")
 	public Result<IPage<SampleInspectStd>> queryPageList(SampleInspectStd sampleInspectStd,
 									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
@@ -87,6 +89,7 @@ public class SampleInspectStdController {
      @AutoLog(value = "验货抽检标准-验货明细")
      @ApiOperation(value = "验货抽检标准-验货明细", notes = "验货抽检标准-验货明细")
      @GetMapping(value = "/getInspectDetail")
+	 @DS("slave_1")
      public Result<List<Map<String, Object>>> getInspectDetail(@RequestParam("pssr") String pssr) {
          Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
          if (pssr == null) {
@@ -113,6 +116,7 @@ public class SampleInspectStdController {
 	@AutoLog(value = "验货抽检标准-添加")
 	@ApiOperation(value="验货抽检标准-添加", notes="验货抽检标准-添加")
 	@PostMapping(value = "/add")
+	@DS("slave_1")
 	public Result<SampleInspectStd> add(@RequestBody SampleInspectStd sampleInspectStd) {
 		Result<SampleInspectStd> result = new Result<SampleInspectStd>();
 		try {
@@ -157,6 +161,7 @@ public class SampleInspectStdController {
 	@AutoLog(value = "验货抽检标准-通过id删除")
 	@ApiOperation(value="验货抽检标准-通过id删除", notes="验货抽检标准-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@DS("slave_1")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			sampleInspectStdService.removeById(id);
@@ -175,6 +180,7 @@ public class SampleInspectStdController {
 	@AutoLog(value = "验货抽检标准-批量删除")
 	@ApiOperation(value="验货抽检标准-批量删除", notes="验货抽检标准-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@DS("slave_1")
 	public Result<SampleInspectStd> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<SampleInspectStd> result = new Result<SampleInspectStd>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -194,6 +200,7 @@ public class SampleInspectStdController {
 	@AutoLog(value = "验货抽检标准-通过id查询")
 	@ApiOperation(value="验货抽检标准-通过id查询", notes="验货抽检标准-通过id查询")
 	@GetMapping(value = "/queryById")
+	@DS("slave_1")
 	public Result<SampleInspectStd> queryById(@RequestParam(name="id",required=true) String id) {
 		Result<SampleInspectStd> result = new Result<SampleInspectStd>();
 		SampleInspectStd sampleInspectStd = sampleInspectStdService.getById(id);
@@ -213,6 +220,7 @@ public class SampleInspectStdController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @DS("slave_1")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<SampleInspectStd> queryWrapper = null;
@@ -246,6 +254,7 @@ public class SampleInspectStdController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @DS("slave_1")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

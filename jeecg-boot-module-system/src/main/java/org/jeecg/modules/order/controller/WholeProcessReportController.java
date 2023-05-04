@@ -9,6 +9,7 @@ import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.PermissionData;
@@ -68,6 +69,7 @@ public class WholeProcessReportController {
 	@ApiOperation(value="全流程报表-分页列表查询", notes="全流程报表-分页列表查询")
 	@GetMapping(value = "/list")
 	@PermissionData(pageComponent = "order/WholeProcessReportList")
+	@DS("slave_1")
 	public Result<IPage<WholeProcessReport>> queryPageList(WholeProcessReport wholeProcessReport,
 									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
@@ -92,6 +94,7 @@ public class WholeProcessReportController {
 	 @AutoLog(value = "全流程报表-SIZE数量查询")
 	 @ApiOperation(value = "全流程报表-SIZE数量查询", notes = "全流程报表-SIZE数量查询")
 	 @GetMapping(value = "/getSizeQty")
+	 @DS("slave_1")
 	 public Result<List<Map<String, Object>>> getSizeQty(@RequestParam("pssr") String pssr) {
 		 Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
 		 if (pssr == null) {
@@ -119,6 +122,7 @@ public class WholeProcessReportController {
 	 @AutoLog(value = "全流程报表-存放区域查询")
 	 @ApiOperation(value = "全流程报表-存放区域查询", notes = "全流程报表-存放区域查询")
 	 @GetMapping(value = "/getLocArea")
+	 @DS("slave_1")
 	 public Result<List<Map<String, Object>>> getLocArea(@RequestParam("pssr") String pssr) {
 		 Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
 		 if (pssr == null) {
@@ -146,6 +150,7 @@ public class WholeProcessReportController {
 	 @AutoLog(value = "全流程报表-库存数据查询")
 	 @ApiOperation(value = "全流程报表-库存数据查询", notes = "全流程报表-库存数据查询")
 	 @GetMapping(value = "/getStockData")
+	 @DS("slave_1")
 	 public Result<Map<String, Object>> getStockData(@RequestParam("pssr") String pssr) {
 		 Result<Map<String, Object>> result = new Result<Map<String, Object>>();
 		 if (pssr == null) {
@@ -173,6 +178,7 @@ public class WholeProcessReportController {
 	 @AutoLog(value = "全流程报表-验货报告查询")
 	 @ApiOperation(value = "全流程报表-验货报告查询", notes = "全流程报表-验货报告查询")
 	 @GetMapping(value = "/getInspectReport")
+	 @DS("slave_1")
 	 public Result<Map<String, Object>> getInspectReport(@RequestParam("pssr") String pssr) {
 		 Result<Map<String, Object>> result = new Result<Map<String, Object>>();
 		 if (pssr == null) {
@@ -199,6 +205,7 @@ public class WholeProcessReportController {
 	@AutoLog(value = "全流程报表-添加")
 	@ApiOperation(value="全流程报表-添加", notes="全流程报表-添加")
 	@PostMapping(value = "/add")
+	@DS("slave_1")
 	public Result<WholeProcessReport> add(@RequestBody WholeProcessReport wholeProcessReport) {
 		Result<WholeProcessReport> result = new Result<WholeProcessReport>();
 		try {
@@ -219,6 +226,7 @@ public class WholeProcessReportController {
 	@AutoLog(value = "全流程报表-编辑")
 	@ApiOperation(value="全流程报表-编辑", notes="全流程报表-编辑")
 	@PutMapping(value = "/edit")
+	@DS("slave_1")
 	public Result<WholeProcessReport> edit(@RequestBody WholeProcessReport wholeProcessReport) {
 		Result<WholeProcessReport> result = new Result<WholeProcessReport>();
 		WholeProcessReport wholeProcessReportEntity = wholeProcessReportService.getById(wholeProcessReport.getId());
@@ -243,6 +251,7 @@ public class WholeProcessReportController {
 	@AutoLog(value = "全流程报表-通过id删除")
 	@ApiOperation(value="全流程报表-通过id删除", notes="全流程报表-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@DS("slave_1")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			wholeProcessReportService.removeById(id);
@@ -261,6 +270,7 @@ public class WholeProcessReportController {
 	@AutoLog(value = "全流程报表-批量删除")
 	@ApiOperation(value="全流程报表-批量删除", notes="全流程报表-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@DS("slave_1")
 	public Result<WholeProcessReport> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<WholeProcessReport> result = new Result<WholeProcessReport>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -280,6 +290,7 @@ public class WholeProcessReportController {
 	@AutoLog(value = "全流程报表-通过id查询")
 	@ApiOperation(value="全流程报表-通过id查询", notes="全流程报表-通过id查询")
 	@GetMapping(value = "/queryById")
+	@DS("slave_1")
 	public Result<WholeProcessReport> queryById(@RequestParam(name="id",required=true) String id) {
 		Result<WholeProcessReport> result = new Result<WholeProcessReport>();
 		WholeProcessReport wholeProcessReport = wholeProcessReportService.getById(id);
@@ -298,6 +309,7 @@ public class WholeProcessReportController {
       * @param request
       */
      @RequestMapping(value = "/exportXls")
+	 @DS("slave_1")
      public ModelAndView exportXls(HttpServletRequest request, WholeProcessReport wholeProcessReport) {
          // Step.1 组装查询条件查询数据
          QueryWrapper<WholeProcessReport> queryWrapper = QueryGenerator.initQueryWrapper(wholeProcessReport, request.getParameterMap());
@@ -354,6 +366,7 @@ public class WholeProcessReportController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @DS("slave_1")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -71,6 +72,7 @@ public class SampleInspectReportMController {
 	 * @return
 	 */
 	@GetMapping(value = "/list")
+	@DS("slave_1")
 	public Result<IPage<SampleInspectReportM>> queryPageList(SampleInspectReportM sampleInspectReportM,
 									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
@@ -93,6 +95,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-取样数量")
 	 @ApiOperation(value = "验货报告主表-取样数量", notes = "验货报告主表-取样数量")
 	 @GetMapping(value = "/getSampleQty")
+	 @DS("slave_1")
 	 public Result<Map<String, Object>> getSampleQty(@RequestParam("pssr") String pssr) {
 		 Result<Map<String, Object>> result = new Result<Map<String, Object>>();
 		 if (pssr == null) {
@@ -118,6 +121,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-缺陷数量")
 	 @ApiOperation(value = "验货报告主表-缺陷数量", notes = "验货报告主表-缺陷数量")
 	 @GetMapping(value = "/getDefectQty")
+	 @DS("slave_1")
 	 public Result<List<Map<String, Object>>> getDefectQty(@RequestParam("pssr") String pssr) {
 		 Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
 		 if (pssr == null) {
@@ -147,6 +151,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-检查点")
 	 @ApiOperation(value = "验货报告主表-检查点", notes = "验货报告主表-检查点")
 	 @GetMapping(value = "/getCheckPoints")
+	 @DS("slave_1")
 	 public Result<List<Map<String, Object>>> getCheckPoints(@RequestParam("pssr") String pssr) {
 		 Result<List<Map<String, Object>>> result = new Result<List<Map<String, Object>>>();
 		 if (pssr == null) {
@@ -178,6 +183,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-增加缺陷数量")
 	 @ApiOperation(value = "验货报告主表-增加缺陷数量", notes = "验货报告主表-增加缺陷数量")
 	 @GetMapping(value = "/addMinor")
+	 @DS("slave_1")
 	 public void addMinor(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
 		 if (pssr == null) {
@@ -220,6 +226,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-减少缺陷数量")
 	 @ApiOperation(value = "验货报告主表-减少缺陷数量", notes = "验货报告主表-减少缺陷数量")
 	 @GetMapping(value = "/subtractMinor")
+	 @DS("slave_1")
 	 public void subtractMinor(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
 		 if (pssr == null) {
@@ -262,6 +269,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-更新验货结果")
 	 @ApiOperation(value = "验货报告主表-更新验货结果", notes = "验货报告主表-更新验货结果")
 	 @GetMapping(value = "/updateInspectorDecision")
+	 @DS("slave_1")
 	 public void updateInspectorDecision(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
 		 if (pssr == null) {
@@ -291,6 +299,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-新增-查询客户订单")
 	 @ApiOperation(value = "验货报告主表-新增-查询客户订单", notes = "验货报告主表-新增-查询客户订单")
 	 @GetMapping(value = "/queryCustOdrNo")
+	 @DS("slave_1")
 	 public Result<Integer> queryCustOdrNo(@RequestParam("pssr") String pssr) {
 		 Result<Integer> result = new Result<Integer>();
 		 if (pssr == null) {
@@ -318,6 +327,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-新增-插入主档")
 	 @ApiOperation(value = "验货报告主表-新增-插入主档", notes = "验货报告主表-新增-插入主档")
 	 @GetMapping(value = "/insertReportM")
+	 @DS("slave_1")
 	 public Result<?> insertReportM(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
 //		 if (paramReportM == null) {
@@ -370,6 +380,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-新增-插入子档")
 	 @ApiOperation(value = "验货报告主表-新增-插入子档", notes = "验货报告主表-新增-插入子档")
 	 @GetMapping(value = "/insertReportD")
+	 @DS("slave_1")
 	 public Result<?> insertReportD(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
 //		 if (pssr == null) {
@@ -403,6 +414,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-添加可追溯编码")
 	 @ApiOperation(value = "验货报告主表-添加可追溯编码", notes = "验货报告主表-添加可追溯编码")
 	 @GetMapping(value = "/addTraceabilityCode")
+	 @DS("slave_1")
 	 public Result<?> addTraceabilityCode(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
 		 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
@@ -429,6 +441,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-删除可追溯编码")
 	 @ApiOperation(value = "验货报告主表-删除可追溯编码", notes = "验货报告主表-删除可追溯编码")
 	 @GetMapping(value = "/subtractTraceabilityCode")
+	 @DS("slave_1")
 	 public Result<?> subtractTraceabilityCode(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
 		 LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
@@ -454,6 +467,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-提交问题")
 	 @ApiOperation(value = "验货报告主表-提交问题", notes = "验货报告主表-提交问题")
 	 @GetMapping(value = "/addQuestion")
+	 @DS("slave_1")
 	 public Result<?> addQuestion(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
 //		 if (pssr == null) {
@@ -500,6 +514,7 @@ public class SampleInspectReportMController {
 	 @AutoLog(value = "验货报告主表-删除问题")
 	 @ApiOperation(value = "验货报告主表-删除问题", notes = "验货报告主表-删除问题")
 	 @GetMapping(value = "/subtractQuestion")
+	 @DS("slave_1")
 	 public Result<?> subtractQuestion(@RequestParam("pssr") String pssr) {
 		 Result result = new Result();
 //		 if (pssr == null) {
@@ -532,6 +547,7 @@ public class SampleInspectReportMController {
 	 * @return
 	 */
 	@PostMapping(value = "/add")
+	@DS("slave_1")
 	public Result<SampleInspectReportM> add(@RequestBody SampleInspectReportMPage sampleInspectReportMPage) {
 		Result<SampleInspectReportM> result = new Result<SampleInspectReportM>();
 		try {
@@ -568,6 +584,7 @@ public class SampleInspectReportMController {
 	
 	//此段在更新时,主表【修改时间】字段不会更新，子表【创建时间】字段会修改为当天的日期，子表【修改时间】字段不会更新？
 	@PutMapping(value = "/edit")
+	@DS("slave_1")
 	public Result<SampleInspectReportM> edit(@RequestBody SampleInspectReportMPage sampleInspectReportMPage) {
 		Result<SampleInspectReportM> result = new Result<SampleInspectReportM>();
 		SampleInspectReportM sampleInspectReportM = new SampleInspectReportM();
@@ -589,6 +606,7 @@ public class SampleInspectReportMController {
 	 * @return
 	 */
 	@DeleteMapping(value = "/delete")
+	@DS("slave_1")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			sampleInspectReportMService.delMain(id);
@@ -605,6 +623,7 @@ public class SampleInspectReportMController {
 	 * @return
 	 */
 	@DeleteMapping(value = "/deleteBatch")
+	@DS("slave_1")
 	public Result<SampleInspectReportM> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<SampleInspectReportM> result = new Result<SampleInspectReportM>();
 		if(ids==null || "".equals(ids.trim())) {
@@ -622,6 +641,7 @@ public class SampleInspectReportMController {
 	 * @return
 	 */
 	@GetMapping(value = "/queryById")
+	@DS("slave_1")
 	public Result<SampleInspectReportM> queryById(@RequestParam(name="id",required=true) String id) {
 		Result<SampleInspectReportM> result = new Result<SampleInspectReportM>();
 		SampleInspectReportM sampleInspectReportM = sampleInspectReportMService.getById(id);
@@ -640,6 +660,7 @@ public class SampleInspectReportMController {
 	 * @return
 	 */
 	@GetMapping(value = "/querySampleInspectReportDByMainId")
+	@DS("slave_1")
 	public Result<List<SampleInspectReportD>> querySampleInspectReportDListByMainId(@RequestParam(name="id",required=true) String id) {
 		Result<List<SampleInspectReportD>> result = new Result<List<SampleInspectReportD>>();
 		List<SampleInspectReportD> sampleInspectReportDList = sampleInspectReportDService.selectByMainId(id);
@@ -655,6 +676,7 @@ public class SampleInspectReportMController {
    * @param response
    */
   @RequestMapping(value = "/exportXls")
+  @DS("slave_1")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
       QueryWrapper<SampleInspectReportM> queryWrapper = null;
@@ -696,6 +718,7 @@ public class SampleInspectReportMController {
    * @return
    */
   @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+  @DS("slave_1")
   public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
